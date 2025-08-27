@@ -1,4 +1,4 @@
-package happy2b.woody.core.flame.core;
+package happy2b.woody.core.flame.manager;
 
 import happy2b.woody.common.api.id.IdGenerator;
 import happy2b.woody.core.flame.resource.ResourceMethod;
@@ -19,7 +19,8 @@ public class ResourceMethodManager {
     private Set<Integer> generatorIndexes = ConcurrentHashMap.newKeySet();
 
     public List<ResourceMethod> allProfilingIncludeMethods = new ArrayList<>();
-    public Set<ResourceMethod> selectedProfilingIncludeMethods = new HashSet<>();
+    public Set<String> selectedResourceTypes = ConcurrentHashMap.newKeySet();
+    public Set<ResourceMethod> selectedProfilingIncludeMethods = ConcurrentHashMap.newKeySet();
 
     public IdGenerator[] idGenerators = new IdGenerator[10];
     public Set<String> tracingMethods = ConcurrentHashMap.newKeySet();
@@ -103,18 +104,23 @@ public class ResourceMethodManager {
 
     public void addSelectedResourceMethod(ResourceMethod resourceMethod) {
         selectedProfilingIncludeMethods.add(resourceMethod);
+        selectedResourceTypes.add(resourceMethod.getResourceType());
     }
 
     public void addSelectedResourceMethod(Collection<ResourceMethod> resourceMethods) {
         selectedProfilingIncludeMethods.addAll(resourceMethods);
+        for (ResourceMethod resourceMethod : resourceMethods) {
+            selectedResourceTypes.add(resourceMethod.getResourceType());
+        }
     }
 
     public void deleteSelectedResources(String type) {
+        selectedResourceTypes.remove(type);
         selectedProfilingIncludeMethods.removeIf(method -> method.getResourceType().equals(type));
     }
 
     public Set<String> getSelectedResourceTypes() {
-        return selectedProfilingIncludeMethods.stream().map(ResourceMethod::getResourceType).collect(Collectors.toSet());
+        return selectedResourceTypes;
     }
 
     public static void destroy() {

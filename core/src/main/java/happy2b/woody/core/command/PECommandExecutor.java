@@ -1,7 +1,7 @@
 package happy2b.woody.core.command;
 
 import happy2b.woody.common.api.WoodyCommand;
-import happy2b.woody.core.flame.core.ProfilingManager;
+import happy2b.woody.core.flame.manager.ProfilingManager;
 import happy2b.woody.core.tool.jni.AsyncProfiler;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public class PECommandExecutor implements WoodyCommandExecutor {
 
     @Override
     public void executeInternal(WoodyCommand command) {
-        String[] segments = command.getEval().split(" ");
+        String[] segments = splitCommandEval(command);
 
         int opCount = 0;
         boolean clear = false, list = false, listSelected = false, select = false;

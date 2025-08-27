@@ -1,4 +1,4 @@
-package happy2b.woody.core.flame.core;
+package happy2b.woody.core.flame.manager;
 
 import happy2b.woody.common.bytecode.InstrumentationUtils;
 import happy2b.woody.core.flame.resource.ResourceMethod;

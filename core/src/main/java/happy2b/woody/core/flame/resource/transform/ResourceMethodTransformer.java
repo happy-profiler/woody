@@ -3,9 +3,8 @@ package happy2b.woody.core.flame.resource.transform;
 import happy2b.woody.common.api.id.IdGenerator;
 import happy2b.woody.common.api.id.ParametricIdGenerator;
 import happy2b.woody.common.utils.MethodUtil;
-import happy2b.woody.core.flame.core.ResourceMethodManager;
+import happy2b.woody.core.flame.manager.ResourceMethodManager;
 import happy2b.woody.core.flame.resource.ResourceMethod;
-import happy2b.woody.core.tool.AGCTPredicate;
 import org.objectweb.asm.*;
 
 import java.lang.instrument.ClassFileTransformer;

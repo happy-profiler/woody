@@ -1,4 +1,4 @@
-package happy2b.woody.core.flame.core;
+package happy2b.woody.core.flame.manager;
 
 import happy2b.woody.common.utils.AnsiLog;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
@@ -43,7 +43,7 @@ public class TraceManager {
     }
 
     public static SpyAPI.ITrace startProfilingTrace(Long tid, String resource, String type, String methodPath, Object traceId) {
-        if (profiling_status == TracingState.ON_TRACING) {
+        if (profiling_status == TracingState.ON_TRACING && ResourceMethodManager.INSTANCE.selectedResourceTypes.contains(type)) {
             ProfilingTrace profilingTrace = new ProfilingTrace(resource, type, methodPath, traceId);
             PROFILING_TRACES.computeIfAbsent(tid, thread1 -> new ProfilingTraces()).startProfilingTrace(profilingTrace);
             return profilingTrace;

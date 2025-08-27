@@ -2,8 +2,8 @@ package happy2b.woody.core.flame.resource.fetch;
 
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.resource.ResourceMethod;
-import happy2b.woody.core.flame.core.ResourceMethodManager;
-import happy2b.woody.core.flame.core.ResourceClassManager;
+import happy2b.woody.core.flame.manager.ResourceMethodManager;
+import happy2b.woody.core.flame.manager.ResourceClassManager;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

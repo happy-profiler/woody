@@ -93,7 +93,7 @@ public class WoodyClient {
                     WoodyCommand command = JSON_ADAPTER.fromJson((String) msg);
                     if (command.getTime() > abortTime) {
                         terminalWriter.println(command.getResult());
-                        if (!command.isBlocked()) {
+                        if (!command.isAsync()) {
                             latch.countDown();
                         }
                     }
@@ -134,13 +134,13 @@ public class WoodyClient {
 
     private void startWorking() {
         String input;
-        System.out.println("请输入内,输入stop退出:");
+        System.out.println("请输入命令,输入stop退出:");
         while ((input = safeReadLine(reader)) != null) {
-            if (input.isEmpty()) {
-                continue;
-            }
             if (serverStop.get()) {
                 break;
+            }
+            if (input.isEmpty()) {
+                continue;
             }
             if ("stop".equalsIgnoreCase(input.trim())) {
                 channel.writeAndFlush("stop");
@@ -148,6 +148,9 @@ public class WoodyClient {
             }
             channel.writeAndFlush(input);
             try {
+                if (latch.getCount() == 0) {
+                    latch = new CountDownLatch(1);
+                }
                 latch.await();
             } catch (InterruptedException e) {
             }

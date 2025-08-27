@@ -2,8 +2,8 @@ package happy2b.woody.core.flame.resource.transform;
 
 import happy2b.woody.common.api.id.ParametricIdGenerator;
 import happy2b.woody.common.reflection.ReflectionUtils;
-import happy2b.woody.core.flame.core.ResourceMethodManager;
-import happy2b.woody.core.flame.core.TraceManager;
+import happy2b.woody.core.flame.manager.ResourceMethodManager;
+import happy2b.woody.core.flame.manager.TraceManager;
 
 import java.woody.SpyAPI;
 import java.lang.reflect.Method;

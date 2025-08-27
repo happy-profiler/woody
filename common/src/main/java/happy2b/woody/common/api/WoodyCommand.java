@@ -11,7 +11,7 @@ public class WoodyCommand {
     private String eval;
     private String result;
     private boolean success;
-    private boolean blocked = false;
+    private boolean async = false;
     private long executeTime;
 
     public WoodyCommand(long time, String eval) {
@@ -55,12 +55,12 @@ public class WoodyCommand {
         this.success = success;
     }
 
-    public boolean isBlocked() {
-        return blocked;
+    public boolean isAsync() {
+        return async;
     }
 
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
+    public void setAsync(boolean async) {
+        this.async = async;
     }
 
     public void result(String result) {

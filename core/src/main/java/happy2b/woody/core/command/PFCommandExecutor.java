@@ -5,9 +5,9 @@ import happy2b.woody.common.thread.AgentThreadFactory;
 import happy2b.woody.core.flame.common.dto.ProfilingSample;
 import happy2b.woody.core.flame.common.dto.ProfilingSampleBase;
 import happy2b.woody.core.flame.common.dto.TraceSamples;
-import happy2b.woody.core.flame.core.ProfilingManager;
-import happy2b.woody.core.flame.core.ResourceFetcherManager;
-import happy2b.woody.core.flame.core.TraceManager;
+import happy2b.woody.core.flame.manager.ProfilingManager;
+import happy2b.woody.core.flame.manager.ResourceFetcherManager;
+import happy2b.woody.core.flame.manager.TraceManager;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 import happy2b.woody.core.server.WoodyBootstrap;
 import happy2b.woody.core.server.WoodyServerHandler;
@@ -51,7 +51,7 @@ public class PFCommandExecutor implements WoodyCommandExecutor {
 
     @Override
     public void executeInternal(WoodyCommand command) {
-        String[] segments = command.getEval().split(" ");
+        String[] segments = splitCommandEval(command);
         Operation operation = null;
         int duration = 0;
         int opCount = 0;
@@ -83,7 +83,7 @@ public class PFCommandExecutor implements WoodyCommandExecutor {
                     command.error("miss profiling file param value!");
                     return;
                 }
-                file = segments[++i];
+                file = segments[++i].trim();
                 if (!file.endsWith(".html")) {
                     file = file + ".html";
                 }
@@ -183,6 +183,7 @@ public class PFCommandExecutor implements WoodyCommandExecutor {
         } finally {
             file = null;
             command.setTime(System.currentTimeMillis());
+            command.setAsync(false);
             WoodyServerHandler.write(command);
         }
     }

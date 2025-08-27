@@ -1,4 +1,4 @@
-package happy2b.woody.core.flame.core;
+package happy2b.woody.core.flame.manager;
 
 import happy2b.woody.common.bytecode.InstrumentationUtils;
 import happy2b.woody.common.utils.AnsiLog;
@@ -17,7 +17,8 @@ public class ResourceClassManager {
 
     public static ResourceClassManager INSTANCE = new ResourceClassManager();
 
-    private Set<Class> ALL_RESOURCE_CLASSES = ConcurrentHashMap.newKeySet();
+    private Set<Class> allResourceClasses = ConcurrentHashMap.newKeySet();
+    private Set<Class> transformedClass = ConcurrentHashMap.newKeySet();
 
     private AtomicBoolean transformerAdded = new AtomicBoolean(false);
 
@@ -27,7 +28,7 @@ public class ResourceClassManager {
     }
 
     public void addResourceClass(Class clazz) {
-        ALL_RESOURCE_CLASSES.add(clazz);
+        allResourceClasses.add(clazz);
     }
 
     public void retransformResourceClasses(Set<Class> resourceClasses) {
@@ -35,8 +36,12 @@ public class ResourceClassManager {
             InstrumentationUtils.getInstrumentation().addTransformer(transformer, true);
         }
         for (Class clazz : resourceClasses) {
+            if (transformedClass.contains(clazz)) {
+                continue;
+            }
             try {
                 InstrumentationUtils.getInstrumentation().retransformClasses(clazz);
+                transformedClass.add(clazz);
             } catch (Throwable e) {
                 AnsiLog.error(e, "One-Profiler: Retransform class '{}' occur exception!", clazz.getName());
             }
@@ -46,7 +51,7 @@ public class ResourceClassManager {
     public static void destroy() {
         InstrumentationUtils.getInstrumentation().removeTransformer(INSTANCE.transformer);
         if (INSTANCE != null) {
-            for (Class clazz : INSTANCE.ALL_RESOURCE_CLASSES) {
+            for (Class clazz : INSTANCE.transformedClass) {
                 try {
                     InstrumentationUtils.getInstrumentation().retransformClasses(clazz);
                 } catch (Exception e) {

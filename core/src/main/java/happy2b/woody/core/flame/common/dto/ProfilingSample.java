@@ -98,29 +98,29 @@ public class ProfilingSample {
         return instanceAlloc;
     }
 
-  public String getEventType() {
-    return eventType;
-  }
+    public String getEventType() {
+        return eventType;
+    }
 
-  public void setEventType(String eventType) {
-    this.eventType = eventType;
-  }
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
 
-  public String getOperation() {
-    return onOperation;
-  }
+    public String getOperation() {
+        return onOperation;
+    }
 
-  public void setOnOperation(String onOperation) {
-    this.onOperation = onOperation;
-  }
+    public void setOnOperation(String onOperation) {
+        this.onOperation = onOperation;
+    }
 
-  public Long getSpanId() {
-    return spanId;
-  }
+    public Long getSpanId() {
+        return spanId;
+    }
 
-  public void setSpanId(Long spanId) {
-    this.spanId = spanId;
-  }
+    public void setSpanId(Long spanId) {
+        this.spanId = spanId;
+    }
 
     public int getTicks() {
         return ticks;

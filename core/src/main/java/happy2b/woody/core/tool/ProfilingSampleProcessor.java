@@ -1,7 +1,7 @@
 package happy2b.woody.core.tool;
 
 import happy2b.woody.core.flame.common.dto.*;
-import happy2b.woody.core.flame.core.ResourceMethodManager;
+import happy2b.woody.core.flame.manager.ResourceMethodManager;
 
 import java.util.*;
 

@@ -2,10 +2,11 @@ package happy2b.woody.core.command;
 
 import happy2b.woody.common.api.WoodyCommand;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
-import happy2b.woody.core.flame.core.ResourceFetcherManager;
+import happy2b.woody.core.flame.manager.ResourceFetcherManager;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +39,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
         boolean select = false, unselect = false;
         boolean listResources = false, listSelectedResources = false, listSelectedResourceTypes = false, listType = false;
 
-        String[] segments = command.getEval().split(" ");
+        String[] segments = splitCommandEval(command);
         for (int i = 0; i < segments.length; i++) {
             String segment = segments[i].trim();
             if (segment.equals(commandName())) {
@@ -66,7 +67,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
                     command.error("miss profiling resource type param value!");
                     return;
                 }
-                type = segments[++i];
+                type = segments[++i].trim();
                 if (ProfilingResourceType.ofType(type) == null) {
                     command.error("invalid resource type: " + type);
                     return;
@@ -76,7 +77,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
                     command.error("miss profiling resource order param value!");
                     return;
                 }
-                orderSegment = segments[++i];
+                orderSegment = segments[++i].trim();
             } else {
                 command.error("profiling event type not support other arguments!");
                 return;
