@@ -36,14 +36,11 @@ public class ResourceClassManager {
             InstrumentationUtils.getInstrumentation().addTransformer(transformer, true);
         }
         for (Class clazz : resourceClasses) {
-            if (transformedClass.contains(clazz)) {
-                continue;
-            }
             try {
                 InstrumentationUtils.getInstrumentation().retransformClasses(clazz);
                 transformedClass.add(clazz);
             } catch (Throwable e) {
-                AnsiLog.error(e, "One-Profiler: Retransform class '{}' occur exception!", clazz.getName());
+                AnsiLog.error(e, "Woody: Retransform class '{}' occur exception!", clazz.getName());
             }
         }
     }

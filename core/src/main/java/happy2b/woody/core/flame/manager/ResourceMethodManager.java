@@ -43,7 +43,7 @@ public class ResourceMethodManager {
     }
 
     public ResourceMethod findProfilingIncludeMethod(String className, String methodName, String descriptor) {
-        for (ResourceMethod method : allProfilingIncludeMethods) {
+        for (ResourceMethod method : selectedProfilingIncludeMethods) {
             if (method.getClazz().getName().equals(className) && method.getMethodName().equals(methodName) && method.getSignature().equals(descriptor)) {
                 return method;
             }
