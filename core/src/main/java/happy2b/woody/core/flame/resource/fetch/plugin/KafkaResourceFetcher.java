@@ -1,7 +1,7 @@
 package happy2b.woody.core.flame.resource.fetch.plugin;
 
 import happy2b.woody.common.reflection.ReflectionUtils;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 import happy2b.woody.core.flame.resource.fetch.ResourceFetcher;
@@ -32,20 +32,20 @@ public class KafkaResourceFetcher implements ResourceFetcher {
         try {
             Object[] instances = AsyncProfiler.getInstance().getInstances(clazz, 100);
             if (instances == null || instances.length == 0) {
-                AnsiLog.error("Woody: Failed to fetch kafka '{}' instance!", clazz.getName());
+                WoodyLog.error("Woody: Failed to fetch kafka '{}' instance!", clazz.getName());
                 return;
             }
             for (Object instance : instances) {
                 Method method = ReflectionUtils.invoke(instance, "getMethod");
                 if (method == null) {
-                    AnsiLog.error("Woody: Failed to fetch kafka '{}' method!", instance.getClass().getName());
+                    WoodyLog.error("Woody: Failed to fetch kafka '{}' method!", instance.getClass().getName());
                     return;
                 }
                 Collection<String> topics = ReflectionUtils.invoke(instance, "getTopics");
                 addResourceMethod(new ResourceMethod("kafka", "Consume Topic " + String.join(",", topics), method));
             }
         } catch (Throwable e) {
-            AnsiLog.error("Woody: Fetch kafka resource occur exception!", e);
+            WoodyLog.error("Woody: Fetch kafka resource occur exception!", e);
         }
     }
 

@@ -3,7 +3,7 @@ package happy2b.woody.core;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 import happy2b.woody.core.config.Configure;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.common.utils.JavaVersionUtils;
 
 import java.io.IOException;
@@ -64,9 +64,9 @@ public class Woody {
             String currentJavaVersion = JavaVersionUtils.javaVersionStr();
             if (targetJavaVersion != null && currentJavaVersion != null) {
                 if (!targetJavaVersion.equals(currentJavaVersion)) {
-                    AnsiLog.warn("Current VM java version: {} do not match target VM java version: {}, attach may fail.",
+                    WoodyLog.warn("Current VM java version: {} do not match target VM java version: {}, attach may fail.",
                             currentJavaVersion, targetJavaVersion);
-                    AnsiLog.warn("Target VM JAVA_HOME is {}, arthas-boot JAVA_HOME is {}, try to set the same JAVA_HOME.",
+                    WoodyLog.warn("Target VM JAVA_HOME is {}, woody-boot JAVA_HOME is {}, try to set the same JAVA_HOME.",
                             targetSystemProperties.getProperty("java.home"), System.getProperty("java.home"));
                 }
             }
@@ -79,9 +79,9 @@ public class Woody {
                 virtualMachine.loadAgent(woodyAgentPath, configure.getWoodyCore() + ";" + configure);
             } catch (IOException e) {
                 if (e.getMessage() != null && e.getMessage().contains("Non-numeric value found")) {
-                    AnsiLog.warn(e);
-                    AnsiLog.warn("It seems to use the lower version of JDK to attach the higher version of JDK.");
-                    AnsiLog.warn(
+                    WoodyLog.warn(e);
+                    WoodyLog.warn("It seems to use the lower version of JDK to attach the higher version of JDK.");
+                    WoodyLog.warn(
                             "This error message can be ignored, the attach may have been successful, and it will still try to connect.");
                 } else {
                     throw e;
@@ -89,9 +89,9 @@ public class Woody {
             } catch (com.sun.tools.attach.AgentLoadException ex) {
                 if ("0".equals(ex.getMessage())) {
                     // https://stackoverflow.com/a/54454418
-                    AnsiLog.warn(ex);
-                    AnsiLog.warn("It seems to use the higher version of JDK to attach the lower version of JDK.");
-                    AnsiLog.warn(
+                    WoodyLog.warn(ex);
+                    WoodyLog.warn("It seems to use the higher version of JDK to attach the lower version of JDK.");
+                    WoodyLog.warn(
                             "This error message can be ignored, the attach may have been successful, and it will still try to connect.");
                 } else {
                     throw ex;

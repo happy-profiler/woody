@@ -3,7 +3,7 @@ package happy2b.woody.core.server;
 import happy2b.woody.common.bytecode.InstrumentationUtils;
 import happy2b.woody.common.reflection.ReflectionUtils;
 import happy2b.woody.common.thread.AgentThreadFactory;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.command.CommandExecutors;
 import happy2b.woody.core.config.Configure;
 import happy2b.woody.core.flame.manager.*;
@@ -94,7 +94,7 @@ public class WoodyBootstrap {
 
         Runtime.getRuntime().addShutdownHook(shutdown);
 
-        AnsiLog.info("WoodyAgent started, working in process id: " + pid);
+        WoodyLog.info("WoodyAgent started, working in process id: " + pid);
 
     }
 

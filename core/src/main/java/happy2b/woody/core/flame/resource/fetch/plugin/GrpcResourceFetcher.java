@@ -1,7 +1,7 @@
 package happy2b.woody.core.flame.resource.fetch.plugin;
 
 import happy2b.woody.common.reflection.ReflectionUtils;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 import happy2b.woody.core.flame.resource.fetch.ResourceFetcher;
@@ -34,7 +34,7 @@ public class GrpcResourceFetcher implements ResourceFetcher {
         try {
             Object[] instances = AsyncProfiler.getInstance().getInstances(clazz, 3);
             if (instances == null || instances.length == 0) {
-                AnsiLog.error("Woody: Failed to fetch grpc '{}' instance!", clazz.getName());
+                WoodyLog.error("Woody: Failed to fetch grpc '{}' instance!", clazz.getName());
                 return;
             }
             for (Object instance : instances) {
@@ -46,7 +46,7 @@ public class GrpcResourceFetcher implements ResourceFetcher {
                         String[] split = key.split("/");
                         Method method = fetchGrpcResourceMethod(split[0], split[1], entry.getValue());
                         if (method == null) {
-                            AnsiLog.error("Woody: Can not find method: " + split[1] + " in " + entry.getValue().getClass().getName());
+                            WoodyLog.error("Woody: Can not find method: " + split[1] + " in " + entry.getValue().getClass().getName());
                             return;
                         }
                         addResourceMethod(new ResourceMethod("grpc", key, method));
@@ -54,7 +54,7 @@ public class GrpcResourceFetcher implements ResourceFetcher {
                 }
             }
         } catch (Throwable e) {
-            AnsiLog.error("Woody: Fetch http profiling resource occur exception", e);
+            WoodyLog.error("Woody: Fetch http profiling resource occur exception", e);
         }
     }
 
@@ -66,7 +66,7 @@ public class GrpcResourceFetcher implements ResourceFetcher {
     private Method fetchGrpcResourceMethod(String clazz, String methodName, Object service) {
         Object serviceImpl = ReflectionUtils.getFieldValues(service, "handler", "callHandler", "method", "serviceImpl");
         if (serviceImpl == null) {
-            AnsiLog.error("Woody: ServiceImpl is null, class: " + clazz);
+            WoodyLog.error("Woody: ServiceImpl is null, class: " + clazz);
             return null;
         }
         List<Method> methods = ReflectionUtils.findMethodIgnoreParamTypes(serviceImpl.getClass(), methodName);

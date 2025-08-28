@@ -1,7 +1,7 @@
 package happy2b.woody.core.flame.manager;
 
 import happy2b.woody.common.bytecode.InstrumentationUtils;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.flame.resource.transform.ResourceMethodTransformer;
 
 import java.util.Set;
@@ -40,7 +40,7 @@ public class ResourceClassManager {
                 InstrumentationUtils.getInstrumentation().retransformClasses(clazz);
                 transformedClass.add(clazz);
             } catch (Throwable e) {
-                AnsiLog.error(e, "Woody: Retransform class '{}' occur exception!", clazz.getName());
+                WoodyLog.error(e, "Woody: Retransform class '{}' occur exception!", clazz.getName());
             }
         }
     }

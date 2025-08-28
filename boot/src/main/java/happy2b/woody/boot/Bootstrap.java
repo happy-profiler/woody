@@ -1,6 +1,6 @@
 package happy2b.woody.boot;
 
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.common.utils.PortUtils;
 
 import java.io.File;
@@ -61,14 +61,14 @@ public class Bootstrap {
         attachArgs.add(new File(woodyHomeDir, "woody-agent.jar").getAbsolutePath());
         attachArgs.add("-serverPort");
         attachArgs.add(availablePort + "");
-        AnsiLog.info("Try to attach process " + pid);
-        AnsiLog.debug("Start woody-core.jar args: " + attachArgs);
-        ProcessUtils.startArthasCore(pid, attachArgs);
+        WoodyLog.info("Try to attach process " + pid);
+        WoodyLog.debug("Start woody-core.jar args: " + attachArgs);
+        ProcessUtils.startWoodyCore(pid, attachArgs);
 
-        AnsiLog.info("Attach process {} success.", pid);
+        WoodyLog.info("Attach process {} success.", pid);
 
         // 启动woody-client
-        AnsiLog.info("woody-client connect {} {}", "127.0.0.1", availablePort);
+        WoodyLog.info("woody-client connect {} {}", "127.0.0.1", availablePort);
 
         System.setProperty("jline.terminal", "org.jline.terminal.impl.PosixTerminal");
         System.setProperty("jline.terminal.dumb", "false");

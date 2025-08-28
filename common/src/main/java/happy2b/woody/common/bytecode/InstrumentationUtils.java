@@ -1,7 +1,7 @@
 package happy2b.woody.common.bytecode;
 
 
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -35,7 +35,7 @@ public class InstrumentationUtils {
             inst.retransformClasses(classes);
             return true;
         } catch (UnmodifiableClassException e) {
-            AnsiLog.error("[One-Profiler]: RetransformClasses class error, classes:{}", classes, e);
+            WoodyLog.error("[One-Profiler]: RetransformClasses class error, classes:{}", classes, e);
             inst.removeTransformer(transformer);
             return false;
         }
@@ -52,7 +52,7 @@ public class InstrumentationUtils {
                 try {
                     inst.retransformClasses(clazz);
                 } catch (Throwable e) {
-                    AnsiLog.error("[One-Profiler]: RetransformClasses class error, class:{}", clazz.getName(), e);
+                    WoodyLog.error("[One-Profiler]: RetransformClasses class error, class:{}", clazz.getName(), e);
                 }
             }
         } finally {
@@ -67,7 +67,7 @@ public class InstrumentationUtils {
     public static List<Class> findClass(String ... classNames) {
         Instrumentation instrumentation = instrumentationRef.get();
         if (instrumentation == null) {
-            AnsiLog.error("[One-Profiler]: InstrumentationUtils: instrumentation is null");
+            WoodyLog.error("[One-Profiler]: InstrumentationUtils: instrumentation is null");
             return null;
         }
         Set<String> nameSet = new HashSet<>(classNames.length);

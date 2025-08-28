@@ -82,7 +82,7 @@ public class MethodUtil {
     try {
       Object element = ReflectionUtils.get(target, field);
       if (Proxy.isProxyClass(element.getClass())) {
-        AnsiLog.error("Can`t find target Method for JDK Proxy class {}", element.getClass().getName());
+        WoodyLog.error("Can`t find target Method for JDK Proxy class {}", element.getClass().getName());
         return null;
       }
       Class targetClass = element.getClass();
@@ -95,10 +95,10 @@ public class MethodUtil {
           return method;
         }
       }
-      AnsiLog.error("Failed find target method {} with desc {} from class {}", methodName, desc, targetClass.getName());
+      WoodyLog.error("Failed find target method {} with desc {} from class {}", methodName, desc, targetClass.getName());
       return null;
     } catch (Exception e) {
-      AnsiLog.error("Find transform target method for target {} field {} method {} desc {} occur exception!", target.getClass().getName(), field, methodName, desc);
+      WoodyLog.error("Find transform target method for target {} field {} method {} desc {} occur exception!", target.getClass().getName(), field, methodName, desc);
       return null;
     }
   }

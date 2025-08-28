@@ -1,7 +1,7 @@
 package happy2b.woody.core.flame.resource.fetch.plugin;
 
 import happy2b.woody.common.reflection.ReflectionUtils;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 import happy2b.woody.core.flame.resource.fetch.ResourceFetcher;
@@ -32,7 +32,7 @@ public class DubboResourceFetcher implements ResourceFetcher {
         try {
             Object[] instances = AsyncProfiler.getInstance().getInstances(clazz, 100);
             if (instances == null || instances.length == 0) {
-                AnsiLog.error("Woody: Failed to fetch dubbo '{}' instance!", clazz.getName());
+                WoodyLog.error("Woody: Failed to fetch dubbo '{}' instance!", clazz.getName());
                 return;
             }
             for (Object instance : instances) {
@@ -41,7 +41,7 @@ public class DubboResourceFetcher implements ResourceFetcher {
                 extractApacheDubboResources(interfaceClass, ref.getClass().getName());
             }
         } catch (Throwable e) {
-            AnsiLog.error("Woody: Fetch http profiling resource occur exception", e);
+            WoodyLog.error("Woody: Fetch http profiling resource occur exception", e);
         }
     }
 
@@ -67,7 +67,7 @@ public class DubboResourceFetcher implements ResourceFetcher {
                 addResourceMethod(new ResourceMethod("dubbo", resource, m));
             }
         } catch (Exception e) {
-            AnsiLog.error("Load dubbo class failed!", e);
+            WoodyLog.error("Load dubbo class failed!", e);
         }
     }
 

@@ -5,11 +5,6 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-/**
- *
- * @author hengyunabc 2018-11-06
- *
- */
 public class IOUtils {
 
     public static String toString(InputStream inputStream) throws IOException {

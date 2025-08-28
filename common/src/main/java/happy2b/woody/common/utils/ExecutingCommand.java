@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * A class for executing on the command line and returning the result of
- * execution.
- *
- * @author alessandro[at]perucchi[dot]org
- */
 public class ExecutingCommand {
 
     private ExecutingCommand() {
@@ -45,12 +39,12 @@ public class ExecutingCommand {
         try {
             p = Runtime.getRuntime().exec(cmdToRunWithArgs);
         } catch (SecurityException e) {
-            AnsiLog.trace("Couldn't run command {}:", Arrays.toString(cmdToRunWithArgs));
-            AnsiLog.trace(e);
+            WoodyLog.trace("Couldn't run command {}:", Arrays.toString(cmdToRunWithArgs));
+            WoodyLog.trace(e);
             return new ArrayList<String>(0);
         } catch (IOException e) {
-            AnsiLog.trace("Couldn't run command {}:", Arrays.toString(cmdToRunWithArgs));
-            AnsiLog.trace(e);
+            WoodyLog.trace("Couldn't run command {}:", Arrays.toString(cmdToRunWithArgs));
+            WoodyLog.trace(e);
             return new ArrayList<String>(0);
         }
 
@@ -63,12 +57,12 @@ public class ExecutingCommand {
             }
             p.waitFor();
         } catch (IOException e) {
-            AnsiLog.trace("Problem reading output from {}:", Arrays.toString(cmdToRunWithArgs));
-            AnsiLog.trace(e);
+            WoodyLog.trace("Problem reading output from {}:", Arrays.toString(cmdToRunWithArgs));
+            WoodyLog.trace(e);
             return new ArrayList<String>(0);
         } catch (InterruptedException ie) {
-            AnsiLog.trace("Problem reading output from {}:", Arrays.toString(cmdToRunWithArgs));
-            AnsiLog.trace(ie);
+            WoodyLog.trace("Problem reading output from {}:", Arrays.toString(cmdToRunWithArgs));
+            WoodyLog.trace(ie);
             Thread.currentThread().interrupt();
         } finally {
             IOUtils.close(reader);

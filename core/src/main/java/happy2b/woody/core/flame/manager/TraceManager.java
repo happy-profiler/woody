@@ -1,6 +1,6 @@
 package happy2b.woody.core.flame.manager;
 
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.common.dto.ProfilingSpan;
 import happy2b.woody.core.flame.common.dto.ProfilingTrace;
@@ -77,7 +77,7 @@ public class TraceManager {
         if (RESOURCE_TYPE_THREAD_GROUPS.size() < types.length) {
             for (ProfilingResourceType type : types) {
                 if (!RESOURCE_TYPE_THREAD_GROUPS.containsKey(type.getValue())) {
-                    AnsiLog.error("Failed to find resource type '{}' threads!", type.getValue());
+                    WoodyLog.error("Failed to find resource type '{}' threads!", type.getValue());
                 }
             }
         }

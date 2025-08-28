@@ -1,7 +1,7 @@
 package happy2b.woody.core.server;
 
 import happy2b.woody.common.thread.AgentThreadFactory;
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 
 /**
  * @author jiangjibo
@@ -34,7 +34,7 @@ public class ClientInactivityMonitor implements Runnable {
             while (true) {
                 Thread.sleep(lastActivityTime + activityThresholdInMills - System.currentTimeMillis());
                 if (System.currentTimeMillis() >= lastActivityTime + activityThresholdInMills) {
-                    AnsiLog.info("client inactivity timeout, close connection, stop server");
+                    WoodyLog.info("client inactivity timeout, close connection, stop server");
                     break;
                 }
             }

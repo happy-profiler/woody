@@ -6,7 +6,7 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 
-public abstract class AnsiLog {
+public abstract class WoodyLog {
 
     static boolean enableColor;
 

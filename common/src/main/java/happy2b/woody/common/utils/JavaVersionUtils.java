@@ -2,11 +2,6 @@ package happy2b.woody.common.utils;
 
 import java.util.Properties;
 
-/**
- *
- * @author hengyunabc 2018-11-21
- *
- */
 public class JavaVersionUtils {
     private static final String VERSION_PROP_NAME = "java.specification.version";
     private static final String JAVA_VERSION_STR = System.getProperty(VERSION_PROP_NAME);

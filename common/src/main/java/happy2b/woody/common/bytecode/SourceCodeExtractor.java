@@ -1,6 +1,6 @@
 package happy2b.woody.common.bytecode;
 
-import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.common.utils.WoodyLog;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -24,7 +24,7 @@ public class SourceCodeExtractor {
         try {
             return Decompiler.decompile(getClassFilePath(clazz), null);
         } catch (Exception e) {
-            AnsiLog.error("Failed extract method {} source code!", clazz.getName());
+            WoodyLog.error("Failed extract method {} source code!", clazz.getName());
             return null;
         }
     }
@@ -34,7 +34,7 @@ public class SourceCodeExtractor {
             String fileName = getClassFilePath(method.getDeclaringClass());
             return Decompiler.decompile(fileName, method);
         } catch (Exception e) {
-            AnsiLog.error("Failed extract method {}#{} source code!", method.getDeclaringClass().getName(), method.getName());
+            WoodyLog.error("Failed extract method {}#{} source code!", method.getDeclaringClass().getName(), method.getName());
             return null;
         }
     }
@@ -44,7 +44,7 @@ public class SourceCodeExtractor {
             init(operator);
         }
         if (className == null) {
-            AnsiLog.error("Can`t save source code with null name!");
+            WoodyLog.error("Can`t save source code with null name!");
             return false;
         }
         if (!PROFILING_SPAN_CLASS.exists()) {
@@ -55,14 +55,14 @@ public class SourceCodeExtractor {
             if (saveFile.exists()) {
                 byte[] bytes = Files.readAllBytes(saveFile.toPath());
                 if (bytes.length == classfileBuffer.length) {
-                    AnsiLog.info("Class for name {} source file is exist!", className);
+                    WoodyLog.info("Class for name {} source file is exist!", className);
                     return true;
                 }
                 boolean delete = saveFile.delete();
                 if (delete) {
-                    AnsiLog.info("Class for name {} source file is expired, delete it!", className);
+                    WoodyLog.info("Class for name {} source file is expired, delete it!", className);
                 } else {
-                    AnsiLog.error("Class for name {} source file is expired, failed to delete it!", className);
+                    WoodyLog.error("Class for name {} source file is expired, failed to delete it!", className);
                     return false;
                 }
             }
@@ -74,13 +74,13 @@ public class SourceCodeExtractor {
 
             boolean created = saveFile.createNewFile();
             if (!created) {
-                AnsiLog.error("Failed to create new source file for class {} !", className);
+                WoodyLog.error("Failed to create new source file for class {} !", className);
                 return false;
             }
             Files.write(saveFile.toPath(), classfileBuffer);
             return true;
         } catch (Exception e) {
-            AnsiLog.error("Save class {} source code occur exception!", className, e);
+            WoodyLog.error("Save class {} source code occur exception!", className, e);
         }
         return false;
     }
