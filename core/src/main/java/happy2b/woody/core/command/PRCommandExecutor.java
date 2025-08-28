@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author jiangjibo
  * @version 1.0
  * @description: profiling resource
- * -ls(list resource) / -lt(list resource type) / -lss(list select resource) / lst(list select type)
+ * -ls(list resource) / -lt(list resource type) / -lss(list select resource) / -lst(list select type)
  * -us(unselect) / -s(select)
  * --type 'kafka'
  * --order '1,2,3'
@@ -117,7 +117,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
         }
 
         if (unselect) {
-            unselectResources(command, type);
+            unselectResources(command, type, orderSegment);
             return;
         }
 
@@ -196,8 +196,14 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
         command.result("select profiling resource success!");
     }
 
-    private void unselectResources(WoodyCommand command, String type) {
-        ResourceFetcherManager.INSTANCE.deleteSelectedResources(type);
+    private void unselectResources(WoodyCommand command, String type, String orderSegment) {
+        List<Integer> orders = new ArrayList<>();
+        if (orderSegment != null) {
+            for (String order : orderSegment.split(",")) {
+                orders.add(Integer.parseInt(order.trim()));
+            }
+        }
+        ResourceFetcherManager.INSTANCE.deleteSelectedResources(type, orders.toArray(new Integer[0]));
         command.result("unselect profiling resource success!");
     }
 

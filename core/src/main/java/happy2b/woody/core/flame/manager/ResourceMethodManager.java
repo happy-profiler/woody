@@ -114,9 +114,17 @@ public class ResourceMethodManager {
         }
     }
 
-    public void deleteSelectedResources(String type) {
-        selectedResourceTypes.remove(type);
-        selectedProfilingIncludeMethods.removeIf(method -> method.getResourceType().equals(type));
+    public void deleteSelectedResources(String type, Integer... orders) {
+        if (orders == null || orders.length == 0) {
+            selectedResourceTypes.remove(type);
+            selectedProfilingIncludeMethods.removeIf(method -> method.getResourceType().equals(type));
+            return;
+        }
+
+        for (Integer order : orders) {
+            selectedProfilingIncludeMethods.removeIf(method -> method.getResourceType().equals(type) && method.getOrder() == order);
+        }
+        selectedResourceTypes = selectedProfilingIncludeMethods.stream().map(ResourceMethod::getResourceType).collect(Collectors.toSet());
     }
 
     public Set<String> getSelectedResourceTypes() {

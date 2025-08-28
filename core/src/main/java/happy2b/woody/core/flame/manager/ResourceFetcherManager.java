@@ -31,8 +31,8 @@ public class ResourceFetcherManager {
         allResourceFetchers.put(fetcher.resourceType().getValue(), fetcher);
     }
 
-    public void deleteSelectedResources(String type) {
-        ResourceMethodManager.INSTANCE.deleteSelectedResources(type);
+    public void deleteSelectedResources(String type, Integer... orders) {
+        ResourceMethodManager.INSTANCE.deleteSelectedResources(type, orders);
     }
 
     public Set<String> listSelectedResourceTypes() {
