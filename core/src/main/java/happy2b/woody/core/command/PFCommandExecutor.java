@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
  * @version 1.0 2025/8/23 10:05 AM
  * profiling start/stop/status
  * start / stop / status
- * --d duration
- * --f filepath
+ * --duration value
+ * --file fileName
  * @description:
  * @since 2025/8/23
  */
@@ -38,6 +38,9 @@ public class PFCommandExecutor implements WoodyCommandExecutor {
     private Thread profilingThread;
     private String file;
     private long startTime;
+
+    PFCommandExecutor() {
+    }
 
     @Override
     public String commandName() {
@@ -68,7 +71,7 @@ public class PFCommandExecutor implements WoodyCommandExecutor {
             } else if (segment.equals("status")) {
                 operation = Operation.STATUS;
                 opCount++;
-            } else if (segment.equals("--d")) {
+            } else if (segment.equals("--duration")) {
                 if (operation != Operation.START) {
                     command.error("invalid command segment: " + segment);
                     return;
@@ -78,7 +81,7 @@ public class PFCommandExecutor implements WoodyCommandExecutor {
                     return;
                 }
                 duration = Integer.parseInt(segments[++i]);
-            } else if (segment.equals("--f")) {
+            } else if (segment.equals("--file")) {
                 if (i == segments.length - 1) {
                     command.error("miss profiling file param value!");
                     return;

@@ -35,4 +35,8 @@ public abstract class CommandExecutors {
         return command;
     }
 
+    public static void destroy() {
+        WOODY_COMMANDS.clear();
+    }
+
 }

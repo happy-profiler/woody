@@ -9,9 +9,11 @@ import happy2b.woody.core.flame.common.dto.ProfilingTraces;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.woody.SpyAPI;
 
 /**
@@ -70,7 +72,7 @@ public class TraceManager {
             Thread.sleep(1 * 1000);
         }
         if (RESOURCE_TYPE_THREAD_GROUPS.isEmpty()) {
-            throw new IllegalStateException("failed to find resource threads:" + types);
+            throw new IllegalStateException("failed to find resource threads:" + Arrays.stream(types).map(ProfilingResourceType::getValue).collect(Collectors.joining(",")));
         }
         if (RESOURCE_TYPE_THREAD_GROUPS.size() < types.length) {
             for (ProfilingResourceType type : types) {

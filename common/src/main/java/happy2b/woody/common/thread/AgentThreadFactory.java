@@ -14,7 +14,8 @@ public final class AgentThreadFactory implements ThreadFactory {
 
         TRACE_METHOD_TRANSFORMER("woody-trace-method-transformer"),
         PROFILING_WORKER("woody-profiling-worker"),
-        SHUTDOWN_HOOK("woody-shutdown-hook");
+        SHUTDOWN_HOOK("woody-shutdown-hook"),
+        WOODY_CLIENT_INACTIVITY_MONITOR("woody-client-inactivity-monitor");
 
         public final String threadName;
 

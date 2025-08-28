@@ -18,13 +18,13 @@ public abstract class ReflectionUtils {
 
   public static Field NOT_EXISTS_FIELD;
 
-  private static final Map<Class<?>, Method[]> declaredMethodsCache =
+  private static final Map<Class<?>, Method[]> DECLARED_METHODS_CACHE =
       new ConcurrentReferenceHashMap<Class<?>, Method[]>(256);
 
-  private static final Map<Class<?>, Map<String, Field>> declaredFieldsCache =
+  private static final Map<Class<?>, Map<String, Field>> DECLARED_FIELDS_CACHE =
       new ConcurrentReferenceHashMap<Class<?>, Map<String, Field>>(256);
 
-  private static final Map<Class<?>, Constructor[]> declaredConstructorCache =
+  private static final Map<Class<?>, Constructor[]> DECLARED_CONSTRUCTOR_CACHE =
       new ConcurrentReferenceHashMap<Class<?>, Constructor[]>(256);
 
   public static <T> T invoke(Object target, String methodName) {
@@ -463,7 +463,7 @@ public abstract class ReflectionUtils {
 
   public static Method[] getDeclaredMethods(Class<?> clazz) {
     Assert.notNull(clazz, "Class must not be null");
-    Method[] result = declaredMethodsCache.get(clazz);
+    Method[] result = DECLARED_METHODS_CACHE.get(clazz);
     if (result == null) {
       Method[] declaredMethods = clazz.getDeclaredMethods();
       List<Method> defaultMethods = findConcreteMethodsOnInterfaces(clazz);
@@ -478,7 +478,7 @@ public abstract class ReflectionUtils {
       } else {
         result = declaredMethods;
       }
-      declaredMethodsCache.put(clazz, (result.length == 0 ? NO_METHODS : result));
+      DECLARED_METHODS_CACHE.put(clazz, (result.length == 0 ? NO_METHODS : result));
     }
     return result;
   }
@@ -558,30 +558,30 @@ public abstract class ReflectionUtils {
 
   private static Map<String, Field> getDeclaredFields(Class<?> clazz) {
     Assert.notNull(clazz, "Class must not be null");
-    Map<String, Field> result = declaredFieldsCache.get(clazz);
+    Map<String, Field> result = DECLARED_FIELDS_CACHE.get(clazz);
     if (result == null) {
       Field[] fields = clazz.getDeclaredFields();
-      declaredFieldsCache.put(clazz, result = (fields.length == 0 ? NO_FIELDS : toMap(fields)));
+      DECLARED_FIELDS_CACHE.put(clazz, result = (fields.length == 0 ? NO_FIELDS : toMap(fields)));
     }
     return result;
   }
 
   private static Constructor[] getDeclaredConstructors(Class<?> clazz) {
     Assert.notNull(clazz, "Class must not be null");
-    Constructor[] result = declaredConstructorCache.get(clazz);
+    Constructor[] result = DECLARED_CONSTRUCTOR_CACHE.get(clazz);
     if (result == null) {
       result = clazz.getDeclaredConstructors();
       for (Constructor constructor : result) {
         constructor.setAccessible(true);
       }
-      declaredConstructorCache.put(clazz, result);
+      DECLARED_CONSTRUCTOR_CACHE.put(clazz, result);
     }
     return result;
   }
 
   public static void clearCache() {
-    declaredMethodsCache.clear();
-    declaredFieldsCache.clear();
+    DECLARED_METHODS_CACHE.clear();
+    DECLARED_FIELDS_CACHE.clear();
   }
 
   public interface MethodCallback {
@@ -711,6 +711,12 @@ public abstract class ReflectionUtils {
       return Character.class;
     }
     return clazz;
+  }
+
+  public static void destroy() {
+    DECLARED_METHODS_CACHE.clear();
+    DECLARED_FIELDS_CACHE.clear();
+    DECLARED_CONSTRUCTOR_CACHE.clear();
   }
 
   private static class NULL {

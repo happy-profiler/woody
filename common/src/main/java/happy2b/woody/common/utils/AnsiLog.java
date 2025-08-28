@@ -1,22 +1,11 @@
 package happy2b.woody.common.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 
-/**
- * <pre>
- * FINEST  -> TRACE
- * FINER   -> DEBUG
- * FINE    -> DEBUG
- * CONFIG  -> INFO
- * INFO    -> INFO
- * WARNING -> WARN
- * SEVERE  -> ERROR
- * </pre>
- *
- * @author hengyunabc 2017-05-03
- * @see org.slf4j.bridge.SLF4JBridgeHandler
- */
 public abstract class AnsiLog {
 
     static boolean enableColor;
@@ -50,17 +39,32 @@ public abstract class AnsiLog {
     private static final String ERROR_PREFIX = "[ERROR] ";
     private static final String ERROR_COLOR_PREFIX = "[" + colorStr("ERROR", RED) + "] ";
 
+    private static PrintStream ps = System.err;
+
     static {
-        if (System.console() != null) {
-            enableColor = true;
-            // windows dos, do not support color
-            if (OSUtils.isWindows()) {
-                enableColor = false;
+        try {
+            File woodyLogDir = new File(System.getProperty("user.home") + File.separator + "logs" + File.separator
+                    + "woody" + File.separator);
+            if (!woodyLogDir.exists()) {
+                woodyLogDir.mkdirs();
             }
-        }
-        // cygwin and mingw support color
-        if (OSUtils.isCygwinOrMinGW()) {
-            enableColor = true;
+            if (!woodyLogDir.exists()) {
+                // #572
+                woodyLogDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "logs" + File.separator
+                        + "woody" + File.separator);
+                if (!woodyLogDir.exists()) {
+                    woodyLogDir.mkdirs();
+                }
+            }
+
+            File log = new File(woodyLogDir, "woody.log");
+
+            if (!log.exists()) {
+                log.createNewFile();
+            }
+            ps = new PrintStream(new FileOutputStream(log, true));
+        } catch (Throwable t) {
+            t.printStackTrace(ps);
         }
     }
 
@@ -161,9 +165,9 @@ public abstract class AnsiLog {
     public static void trace(String msg) {
         if (canLog(Level.FINEST)) {
             if (enableColor) {
-                System.out.println(TRACE_COLOR_PREFIX + msg);
+                ps.println(TRACE_COLOR_PREFIX + msg);
             } else {
-                System.out.println(TRACE_PREFIX + msg);
+                ps.println(TRACE_PREFIX + msg);
             }
         }
     }
@@ -176,16 +180,16 @@ public abstract class AnsiLog {
 
     public static void trace(Throwable t) {
         if (canLog(Level.FINEST)) {
-            t.printStackTrace(System.out);
+            t.printStackTrace(ps);
         }
     }
 
     public static void debug(String msg) {
         if (canLog(Level.FINER)) {
             if (enableColor) {
-                System.out.println(DEBUG_COLOR_PREFIX + msg);
+                ps.println(DEBUG_COLOR_PREFIX + msg);
             } else {
-                System.out.println(DEBUG_PREFIX + msg);
+                ps.println(DEBUG_PREFIX + msg);
             }
         }
     }
@@ -198,16 +202,16 @@ public abstract class AnsiLog {
 
     public static void debug(Throwable t) {
         if (canLog(Level.FINER)) {
-            t.printStackTrace(System.out);
+            t.printStackTrace(ps);
         }
     }
 
     public static void info(String msg) {
         if (canLog(Level.CONFIG)) {
             if (enableColor) {
-                System.out.println(INFO_COLOR_PREFIX + msg);
+                ps.println(INFO_COLOR_PREFIX + msg);
             } else {
-                System.out.println(INFO_PREFIX + msg);
+                ps.println(INFO_PREFIX + msg);
             }
         }
     }
@@ -220,16 +224,16 @@ public abstract class AnsiLog {
 
     public static void info(Throwable t) {
         if (canLog(Level.CONFIG)) {
-            t.printStackTrace(System.out);
+            t.printStackTrace(ps);
         }
     }
 
     public static void warn(String msg) {
         if (canLog(Level.WARNING)) {
             if (enableColor) {
-                System.out.println(WARN_COLOR_PREFIX + msg);
+                ps.println(WARN_COLOR_PREFIX + msg);
             } else {
-                System.out.println(WARN_PREFIX + msg);
+                ps.println(WARN_PREFIX + msg);
             }
         }
     }
@@ -242,16 +246,16 @@ public abstract class AnsiLog {
 
     public static void warn(Throwable t) {
         if (canLog(Level.WARNING)) {
-            t.printStackTrace(System.out);
+            t.printStackTrace(ps);
         }
     }
 
     public static void error(String msg) {
         if (canLog(Level.SEVERE)) {
             if (enableColor) {
-                System.out.println(ERROR_COLOR_PREFIX + msg);
+                ps.println(ERROR_COLOR_PREFIX + msg);
             } else {
-                System.out.println(ERROR_PREFIX + msg);
+                ps.println(ERROR_PREFIX + msg);
             }
         }
     }
@@ -265,20 +269,20 @@ public abstract class AnsiLog {
     public static void error(String format, Throwable t) {
         if (canLog(Level.SEVERE)) {
             error(format);
-            t.printStackTrace();
+            t.printStackTrace(ps);
         }
     }
 
     public static void error(Throwable t, String format, Object... arguments) {
         if (canLog(Level.SEVERE)) {
             error(format(format, arguments));
-            t.printStackTrace();
+            t.printStackTrace(ps);
         }
     }
 
     public static void error(Throwable t) {
         if (canLog(Level.SEVERE)) {
-            t.printStackTrace(System.out);
+            t.printStackTrace(ps);
         }
     }
 

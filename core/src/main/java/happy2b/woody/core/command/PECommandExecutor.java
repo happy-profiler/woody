@@ -26,6 +26,9 @@ public class PECommandExecutor implements WoodyCommandExecutor {
     private static final long DEFAULT_LOCK_INTERVAL = 50_000_000L; // 50ms
     private static final long DEFAULT_ALLOC_INTERVAL = 1024 * 1024L; // 1024kb
 
+    PECommandExecutor() {
+    }
+
     @Override
     public String commandName() {
         return "pe";

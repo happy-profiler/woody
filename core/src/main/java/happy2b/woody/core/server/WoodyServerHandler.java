@@ -25,6 +25,8 @@ public class WoodyServerHandler extends ChannelInboundHandlerAdapter {
         if (channel == null) {
             channel = ctx.channel();
         }
+        ClientInactivityMonitor.INSTANCE.refresh();
+
         String eval = msg.toString().trim();
         WoodyCommand command = CommandExecutors.execute(eval);
         if (StopCommandExecutor.COMMAND_NAME.equals(eval)) {
@@ -40,5 +42,9 @@ public class WoodyServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
         channel.writeAndFlush(JSON_ADAPTER.toJson(command));
+    }
+
+    public static void destroy() {
+        channel = null;
     }
 }

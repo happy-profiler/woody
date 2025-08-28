@@ -19,11 +19,11 @@ public class ResourceMethodAdvice extends SpyAPI.AbstractSpy {
     public static final String PROFILING_TRACE_CLASS = SpyAPI.ITrace.class.getName().replace(".", "/");
     public static final String PROFILING_TRACE_CLASS_DESC = "L" + PROFILING_TRACE_CLASS + ";";
 
-    public static final Method START_TRACE_METHOD;
-    public static final Method START_TRACE_WITH_PARAM_METHOD;
-    public static final Method START_SPAN_METHOD;
-    public static final Method START_SPAN_WITH_PARAM_METHOD;
-    public static final Method FINISH_TRACE_METHOD;
+    public static Method START_TRACE_METHOD;
+    public static Method START_TRACE_WITH_PARAM_METHOD;
+    public static Method START_SPAN_METHOD;
+    public static Method START_SPAN_WITH_PARAM_METHOD;
+    public static Method FINISH_TRACE_METHOD;
 
     private static SpyAPI.AbstractSpy spy = new ResourceMethodAdvice();
 
@@ -55,5 +55,12 @@ public class ResourceMethodAdvice extends SpyAPI.AbstractSpy {
         return TraceManager.startProfilingSpan(Thread.currentThread().getId(), idGenerator.generateSpanId(param), System.nanoTime(), operationName);
     }
 
+    public static void destroy() {
+        START_TRACE_METHOD = null;
+        START_TRACE_WITH_PARAM_METHOD = null;
+        START_SPAN_METHOD = null;
+        START_SPAN_WITH_PARAM_METHOD = null;
+        FINISH_TRACE_METHOD = null;
+    }
 
 }

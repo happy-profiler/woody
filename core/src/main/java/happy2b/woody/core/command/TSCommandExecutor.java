@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * -f flame graph file
  * -c clear
  * --file fileName
- * --e event
+ * --event value
  * --id traceId
  * --top N
  * @since 2025/8/25
@@ -34,7 +34,10 @@ import java.util.stream.Collectors;
 public class TSCommandExecutor implements WoodyCommandExecutor {
 
     // 定义格式化模板（线程安全，可全局复用）
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+    TSCommandExecutor() {
+    }
 
     @Override
     public String commandName() {
@@ -86,7 +89,7 @@ public class TSCommandExecutor implements WoodyCommandExecutor {
                     return;
                 }
                 topN = Integer.parseInt(segments[++i].trim());
-            } else if (segment.equals("--e")) {
+            } else if (segment.equals("--event")) {
                 if (i == segments.length - 1) {
                     command.error("missing trace sample event param value!");
                     return;
@@ -214,7 +217,7 @@ public class TSCommandExecutor implements WoodyCommandExecutor {
         for (ProfilingSample sp : samples) {
             Instant instant = Instant.ofEpochMilli(sp.getSampleTime() / 1_000_000);
             LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-            sb.append("\n").append("time:").append(localDateTime.format(FORMATTER));
+            sb.append("\n").append("time:").append(localDateTime.format(formatter));
             if (ProfilingEvent.ALLOC.getSegment().equals(eventType)) {
                 sb.append(",alloc:").append(sp.getInstanceAlloc());
             }
@@ -320,11 +323,11 @@ public class TSCommandExecutor implements WoodyCommandExecutor {
 
             Instant instant = Instant.ofEpochMilli(samples.get(0).getSampleTime() / 1_000_000);
             LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-            String startTime = localDateTime.format(FORMATTER);
+            String startTime = localDateTime.format(formatter);
 
             instant = Instant.ofEpochMilli(samples.get(samples.size() - 1).getSampleTime() / 1_000_000);
             localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-            String endTime = localDateTime.format(FORMATTER);
+            String endTime = localDateTime.format(formatter);
 
             sb.append("event:").append(eventType.getSegment()).append(", traceId:").append(samples.get(0).getTraceId())
                     .append(", sampleNum:").append(samples.size()).append(", start:").append(startTime).append(", end:").append(endTime);

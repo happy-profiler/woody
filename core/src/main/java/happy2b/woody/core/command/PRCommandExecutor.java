@@ -6,7 +6,6 @@ import happy2b.woody.core.flame.manager.ResourceFetcherManager;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -15,11 +14,14 @@ import java.util.stream.Collectors;
  * @description: profiling resource
  * -ls(list resource) / -lt(list resource type) / -lss(list select resource) / lst(list select type)
  * -us(unselect) / -s(select)
- * --t type 'kafka'
- * --o orders '1,2,3'
+ * --type 'kafka'
+ * --order '1,2,3'
  * @since 2025/8/25
  */
 public class PRCommandExecutor implements WoodyCommandExecutor {
+
+    PRCommandExecutor() {
+    }
 
     @Override
     public String commandName() {
@@ -62,7 +64,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
             } else if (segment.equals("-us")) {
                 unselect = true;
                 opCount++;
-            } else if (segment.equals("--t")) {
+            } else if (segment.equals("--type")) {
                 if (i == segments.length - 1) {
                     command.error("miss profiling resource type param value!");
                     return;
@@ -72,7 +74,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
                     command.error("invalid resource type: " + type);
                     return;
                 }
-            } else if (segment.equals("--o")) {
+            } else if (segment.equals("--order")) {
                 if (ProfilingResourceType.ofType(type) == null) {
                     command.error("miss profiling resource order param value!");
                     return;

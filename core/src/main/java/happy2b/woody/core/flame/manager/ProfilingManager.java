@@ -109,6 +109,7 @@ public class ProfilingManager {
                 try {
                     INSTANCE.stopProfiling();
                 } catch (Throwable e) {
+                    // ignore
                 }
             }
             INSTANCE.traceSamples = null;

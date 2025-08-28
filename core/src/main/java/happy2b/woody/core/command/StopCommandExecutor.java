@@ -12,6 +12,9 @@ public class StopCommandExecutor implements WoodyCommandExecutor {
 
     public static final String COMMAND_NAME = "stop";
 
+    StopCommandExecutor() {
+    }
+
     @Override
     public String commandName() {
         return COMMAND_NAME;

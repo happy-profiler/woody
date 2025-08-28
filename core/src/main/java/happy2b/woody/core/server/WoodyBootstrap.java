@@ -1,9 +1,13 @@
 package happy2b.woody.core.server;
 
 import happy2b.woody.common.bytecode.InstrumentationUtils;
+import happy2b.woody.common.reflection.ReflectionUtils;
 import happy2b.woody.common.thread.AgentThreadFactory;
+import happy2b.woody.common.utils.AnsiLog;
+import happy2b.woody.core.command.CommandExecutors;
 import happy2b.woody.core.config.Configure;
 import happy2b.woody.core.flame.manager.*;
+import happy2b.woody.core.flame.resource.transform.ResourceMethodAdvice;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,9 +23,6 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.security.CodeSource;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarFile;
 import java.woody.SpyAPI;
@@ -36,9 +37,7 @@ public class WoodyBootstrap {
 
     private static WoodyBootstrap bootstrapInstance;
 
-
     private static final String WOODY_SPY_JAR = "woody-spy.jar";
-    private File outputPath;
     private Configure configure;
 
     private int pid;
@@ -46,7 +45,6 @@ public class WoodyBootstrap {
     private AtomicBoolean isBindRef = new AtomicBoolean(false);
 
     private Thread shutdown;
-    private ExecutorService executorService;
 
     private Channel serverChannel;
     private EventLoopGroup bossGroup;
@@ -64,15 +62,6 @@ public class WoodyBootstrap {
         this.instrumentation = instrumentation;
         InstrumentationUtils.setInstrumentation(instrumentation);
 
-        executorService = Executors.newCachedThreadPool(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                final Thread t = new Thread(r, "as-command-execute-daemon");
-                t.setDaemon(true);
-                return t;
-            }
-        });
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +73,15 @@ public class WoodyBootstrap {
             }
         }).start();
 
+        ClientInactivityMonitor.INSTANCE.start();
+
         initSpy();
+
+        try {
+            SpyAPI.init();
+        } catch (Throwable e) {
+            // ignore
+        }
 
         latch.await();
 
@@ -96,6 +93,8 @@ public class WoodyBootstrap {
         });
 
         Runtime.getRuntime().addShutdownHook(shutdown);
+
+        AnsiLog.info("WoodyAgent started, working in process id: " + pid);
 
     }
 
@@ -156,12 +155,6 @@ public class WoodyBootstrap {
                 workerGroup.shutdownGracefully().sync();
             }
         }
-
-        try {
-            SpyAPI.init();
-        } catch (Throwable e) {
-            // ignore
-        }
     }
 
     private void initSpy() throws Throwable {
@@ -195,13 +188,17 @@ public class WoodyBootstrap {
         ProfilingManager.destroy();
         ResourceClassManager.destroy();
         ResourceFetcherManager.destroy();
+        ResourceMethodAdvice.destroy();
         ResourceMethodManager.destroy();
         TraceManager.destroy();
+        ClientInactivityMonitor.destroy();
+        WoodyServerHandler.destroy();
+        ReflectionUtils.destroy();
+        CommandExecutors.destroy();
 
         cleanSpyReference();
 
         serverChannel.writeAndFlush("stop");
-        executorService.shutdownNow();
         if (serverChannel != null) {
             serverChannel.close();
             serverChannel = null;
@@ -216,7 +213,6 @@ public class WoodyBootstrap {
         }
         shutdown = null;
         bootstrapInstance = null;
-        executorService = null;
     }
 
     private void cleanSpyReference() {
