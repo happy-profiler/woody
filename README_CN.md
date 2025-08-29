@@ -21,7 +21,7 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 - 实现业务请求与火焰图样本的精确关联
 - 支持手动过滤无关业务入口，提高采样精准率
 - 极低性能损耗，适合生产环境使用
-- 代码少量借鉴自Arthas（agent、spy模块）
+- 代码少量借鉴自Arthas
 
 ## 支持中间件
 
@@ -63,6 +63,9 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 | --type | 指定中间件类型（支持上述5种类型） |
 | --order | 指定中间件业务入口的资源编号（多编号用英文逗号分隔）<br>不指定时表示选择该类型的所有入口资源 |
 
+<img width="600" height="1464" alt="image" src="https://github.com/user-attachments/assets/8ce2eb40-c15a-4beb-bdf1-3b40a779f34c" />
+
+
 ### pe（profiling event）- 选择采集事件类型
 
 用于指定需要采集的性能事件类型，对应async-profiler的4种火焰图类型。
@@ -79,6 +82,10 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 
 > 支持同时选择多个事件类型，将生成对应类型的火焰图
 
+<img width="600" height="270" alt="image" src="https://github.com/user-attachments/assets/1cdbc405-0eed-4457-b2e0-875dc1036b47" />
+
+
+
 ### pf（profiling）- 操作性能分析过程
 
 用于控制async-profiler的启动、停止和状态查询。
@@ -90,6 +97,10 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 | status | 查询当前性能分析状态（未运行/已运行时长） |
 | --duration | 设置分析持续时间（秒），时间到后自动结束<br>（非必须，可通过stop命令提前结束） |
 | --file | 指定分析结束后生成的火焰图文件名<br>（默认生成在工具运行目录，多事件时会自动添加类型前缀）<br>（未指定时，采样结果将被缓存，供ts命令使用） |
+
+<img width="600" height="314" alt="image" src="https://github.com/user-attachments/assets/b6c96bf8-5c17-4470-bbf3-d87aa86fccbc" />
+<img width="600" height="206" alt="image" src="https://github.com/user-attachments/assets/d6669c88-dad0-4b5d-b7e3-e0fb3c4e3e87" />
+
 
 ### ts（trace sample）- 检索分析业务请求和样本，生成火焰图
 
@@ -107,6 +118,12 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 
 > traceId默认生成规则：1~Long.MAX_VALUE间的随机数<br>
 > 可通过修改`ParametricIdGenerator`实现自定义traceId生成逻辑（从业务上下文/参数/入口对象提取），下个版本可通过命令及表达式从业务请求生成
+
+<img width="600" height="1066" alt="image" src="https://github.com/user-attachments/assets/89720447-380c-4499-b734-8a59fc707e56" />
+<img width="600" height="154" alt="image" src="https://github.com/user-attachments/assets/96e5d097-18c0-4518-b5d3-c034d9f2b0cb" />
+<img width="600" height="1822" alt="image" src="https://github.com/user-attachments/assets/c9eb3f90-e282-4a4e-84f4-369e16fa36e7" />
+
+
 
 ## 如何本地编译及调试
 本地编译: clone工程，执行 `mvn clean package -DskipTests` ，boot模块生成的jar包就是工具包，直接运行即可
