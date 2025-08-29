@@ -1,63 +1,118 @@
-## Woody
-Woody项目是一个专注于Java应用性能问题分析诊断的工具，目前在不断完善功能中。
+# Woody：Java应用性能诊断分析工具
 
-目前碰到以下情形可以通过Woody来诊断分析:
+Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开发者
+1. 定位定位高GC频率问题，识别内存分配热点
+2. 分析CPUCPU使用率过高的代码路径
+3. 追踪接口耗时瓶颈，定位内部操作耗时占比
+4. 诊断锁竞争问题，支持精准优化
+5. 针对特定业务接口/请求的性能问题（CPU、内存、耗时）进行深度分析
 
-  1. 应用GC频率较高，需要定位哪些业务请求，哪些代码分配内存较多，以及分配次数和分配字节数
-  2. 应用CPU使用率较高，需要定位是哪些业务请求，哪些代码使用了大量CPU资源，以及cpu资源消耗比例
-  3. 应用接口耗时较长，定位接口内部的哪些操作，哪些代码消耗时间，以及相应的时间消耗比例
-  4. 应用锁竞争激烈，需要精准优化
-  5. 某个业务接口，某个特定请求有性能问题(cpu,内存，耗时),需要精确定位问题
+## 适用环境
 
-Woody目前只支持jdk1.8+，支持mac，linux x64/arm64，低版本的jdk和其他操作系统暂时不支持。通过命令行交互，配合async-profiler, 输出采样样本和火焰图来分析定位问题。火焰图查看方式请自行AI学习。
+- **JDK版本**：支持JDK 1.8及以上
+- **操作系统**：
+  - macOS
+  - Linux x64/arm64
+- 低版本JDK和其他操作系统暂不支持
 
-Woody能将业务请求和火焰图样本精确关联，可手动过滤不需要分析的业务入口，提高采样精准率，能将消耗降的很低。
+## 核心特性
 
-工程少量代码借鉴自arthas, 主要是agent,spy模块,不重复造轮子。
+- 基于命令行交互，集成async-profiler生成采样样本和火焰图
+- 实现业务请求与火焰图样本的精确关联
+- 支持手动过滤无关业务入口，提高采样精准率
+- 极低性能损耗，适合生产环境使用
+- 代码少量借鉴自Arthas（agent、spy模块）
 
-### 支持中间件列表:
-  1. SpringMVC
-  2. Dubbo
-  3. Grpc
-  4. Kafka
-  5. RocketMQ
+## 支持中间件
 
-目前只支持上述5个中间件，后续会不断丰富。
+1. SpringMVC
+2. Dubbo
+3. Grpc
+4. Kafka
+5. RocketMQ
 
-### 快速开始
+> 后续将持续扩展支持更多中间件
 
-从项目的release界面下载最新`woody-boot-xxx.jar`版本，然后用`java -jar` 形式启动
-```bash
-  java -jar woody-boot-1.0.0.jar
-```
-<img width="1000" height="406" alt="image" src="https://github.com/user-attachments/assets/3f065671-762e-4b30-a5f5-1e070ee03715" />
+## 快速开始
 
-然后选择对应的java进程编号，之后会进入命令交互界面。
+1. 从项目release页面下载最新版本的`woody-boot-xxx.jar`
+2. 启动工具：
+   ```bash
+   java -jar woody-boot-1.0.0.jar
+   ```
+3. 选择目标Java进程编号，进入命令交互界面，输入stop结束退出
 
-### 命令列表
+![Woody启动界面](https://github.com/user-attachments/assets/3f065671-762e-4b30-a5f5-1e070ee03715)
 
-#### pr(profiling resource)
-可选参数:
-* -ls: list resource, 列举出当前应用的业务入口资源
-<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/3dad9c98-ba42-4551-8208-0dd96730915c" />
+## 命令参考
 
-* -lt: list resource type, 列举出当前应用的所有业务资源类型
-<img width="400" height="132" alt="image" src="https://github.com/user-attachments/assets/cf12ca39-750b-46df-8f0f-51ee450ca013" />
+单横杠`-`表示命令操作，双横杠`--`表示参数，后续要接参数值
 
-  
-* -lst: list selected resource types, 列举出已选择业务入口资源类型列表，没选时为[]
-<img width="400" height="138" alt="image" src="https://github.com/user-attachments/assets/2982c61e-7882-440a-906b-bc8020589450" />
+### pr（profiling resource）- 选择分析的业务入口
 
+用于指定需要分析的业务入口资源，可同时选择多种中间件的多个入口。
 
-* -lss: list selected resource, 列举出已选择的业务入口资源
-<img width="400" height="260" alt="image" src="https://github.com/user-attachments/assets/d3d67881-683e-48c7-9c0a-f62b3904af74" />
+| 参数 | 说明 |
+|------|------|
+| -ls | 列举当前应用的所有业务入口资源 |
+| -lt | 列举当前应用支持的业务资源类型 |
+| -s | 选择业务入口资源 |
+| -us | 移除已选中的业务入口资源 |
+| -lst | 列举已选择的业务入口资源类型列表（未选择时为空） |
+| -lss | 列举已选择的业务入口资源 |
+| --type | 指定中间件类型（支持上述5种类型） |
+| --order | 指定中间件业务入口的资源编号（多编号用英文逗号分隔）<br>不指定时表示选择该类型的所有入口资源 |
 
+### pe（profiling event）- 选择采集事件类型
 
-* -us: unselect, 移除已选中的业务入口资源
-* -s : select, 选择业务入口资源
-<img width="600" height="130" alt="image" src="https://github.com/user-attachments/assets/cf876f61-32e7-443f-9c6a-4469be4b0aa6" />
+用于指定需要采集的性能事件类型，对应async-profiler的4种火焰图类型。
 
-* --type
-* --order
+| 参数 | 说明 |
+|------|------|
+| -l | 列举当前应用支持的事件类型<br>（注：部分应用可能不支持alloc，取决于JDK版本和操作系统） |
+| -s | 选择要采集的事件类型 |
+| --cpu | CPU事件，参数为采样间隔（ms） |
+| --alloc | 内存分配事件，参数为采样阈值（kb） |
+| --wall | 耗时事件，参数为采样间隔（ms） |
+| --lock | 锁竞争事件，参数为采样间隔（ms） |
+| -c | 清除已选中的事件类型 |
 
+> 支持同时选择多个事件类型，将生成对应类型的火焰图
 
+### pf（profiling）- 操作性能分析过程
+
+用于控制async-profiler的启动、停止和状态查询。
+
+| 参数 | 说明 |
+|------|------|
+| start | 启动性能分析<br>（启动后需在30秒内触发已选择的业务入口请求，否则启动失败） |
+| stop | 结束性能分析 |
+| status | 查询当前性能分析状态（未运行/已运行时长） |
+| --duration | 设置分析持续时间（秒），时间到后自动结束<br>（非必须，可通过stop命令提前结束） |
+| --file | 指定分析结束后生成的火焰图文件名<br>（默认生成在工具运行目录，多事件时会自动添加类型前缀）<br>（未指定时，采样结果将被缓存，供ts命令使用） |
+
+### ts（trace sample）- 检索分析业务请求和样本，生成火焰图
+
+用于检索性能分析样本，支持通过traceId定位特定请求，或查看资源消耗TopN的请求。
+
+| 参数 | 说明 |
+|------|------|
+| -l | 列出采样样本（需配合--id或--top参数） |
+| -f | 生成火焰图（需配合--id或--top参数） |
+| -c | 清除缓存的前次分析样本数据 |
+| --file | 指定生成的火焰图文件名（配合-f参数使用） |
+| --event | 指定分析事件类型<br>（当pe命令选择多个事件时必须指定，单个事件时可省略） |
+| --id | 指定traceId（业务请求唯一标识），检索对应请求的样本 |
+| --top | 指定数量N，检索资源消耗最多的前N个请求ID<br>（将显示样本数量、起止时间等信息） |
+
+> traceId默认生成规则：1~Long.MAX_VALUE间的随机数<br>
+> 可通过修改`ParametricIdGenerator`实现自定义traceId生成逻辑（从业务上下文/参数/入口对象提取），下个版本可通过命令及表达式从业务请求生成
+
+## 如何本地编译及调试
+本地编译: clone工程，执行 `mvn clean package -DskipTests` ，boot模块生成的jar包就是工具包，直接运行即可
+
+调试: 待分析应用添加远程debug参数和端口 `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Xdebug` ，woody工程直接远程关联debug即可
+
+## 火焰图查看
+
+火焰图的具体查看方法请参考相关文档或通过AI工具学习。
