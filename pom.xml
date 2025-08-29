@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>spy</module>
-        <module>code-analyzing</module>
         <module>common</module>
         <module>core</module>
         <module>agent</module>
@@ -30,11 +29,6 @@
             <dependency>
                 <groupId>happy2b</groupId>
                 <artifactId>woody-common</artifactId>
-                <version>${project.versions}</version>
-            </dependency>
-            <dependency>
-                <groupId>happy2b</groupId>
-                <artifactId>code-analyzing</artifactId>
                 <version>${project.versions}</version>
             </dependency>
             <dependency>
