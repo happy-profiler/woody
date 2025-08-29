@@ -238,6 +238,10 @@ public class AsyncProfiler implements AsyncProfilerMXBean {
         syncTidRsStackFrameHeightMap0(heightMap);
     }
 
+    public void destroy() {
+        instance = null;
+    }
+
     private native Set<String> getSupportEvents0();
 
     private native void start0(long cpuInterval, long wallInterval, long lockInterval, long allocInterval, boolean reset) throws IllegalStateException;
@@ -251,5 +255,6 @@ public class AsyncProfiler implements AsyncProfilerMXBean {
     private native void setResourceMethods0(ResourceMethod[] methods);
 
     private native void syncTidRsStackFrameHeightMap0(Map<Long, Integer> heightMap);
+
 
 }
