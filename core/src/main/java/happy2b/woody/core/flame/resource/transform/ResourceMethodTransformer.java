@@ -87,9 +87,9 @@ public class ResourceMethodTransformer implements ClassFileTransformer {
             mv.visitLdcInsn(includeMethod.getResource());
             mv.visitLdcInsn(includeMethod.getMethodPath());
 
-            int order = includeMethod.getIdGenerator().getOrder();
+            IdGenerator idGenerator = includeMethod.getIdGenerator();
+            int order = idGenerator.getOrder();
             mv.visitLdcInsn(order);
-            IdGenerator idGenerator = ResourceMethodManager.INSTANCE.idGenerators[order];
             if (idGenerator instanceof ParametricIdGenerator) {
                 if (includeMethod.getMethod().getParameterTypes().length == 0) {
                     throw new IllegalStateException("method " + includeMethod.getMethodName() + " has no parameter");

@@ -16,13 +16,11 @@ public class ResourceMethodManager {
 
     public static ResourceMethodManager INSTANCE = new ResourceMethodManager();
 
-    private Set<Integer> generatorIndexes = ConcurrentHashMap.newKeySet();
-
     public List<ResourceMethod> allProfilingIncludeMethods = new ArrayList<>();
+    public Map<String,ResourceMethod> methodPathResourceMappings = new ConcurrentHashMap<>();
     public Set<String> selectedResourceTypes = ConcurrentHashMap.newKeySet();
     public Set<ResourceMethod> selectedProfilingIncludeMethods = ConcurrentHashMap.newKeySet();
 
-    public IdGenerator[] idGenerators = new IdGenerator[10];
     public Set<String> tracingMethods = ConcurrentHashMap.newKeySet();
 
     private ResourceMethodManager() {
@@ -31,15 +29,10 @@ public class ResourceMethodManager {
     public void addProfilingIncludeMethod(ResourceMethod method) {
         allProfilingIncludeMethods.add(method);
         tracingMethods.add(method.getClazz().getName().replace(".", "/"));
+        methodPathResourceMappings.put(method.getMethodPath(), method);
 
         int order = method.getIdGenerator().getOrder();
-        if (generatorIndexes.contains(order)) {
-            return;
-        }
-        if (generatorIndexes.size() == idGenerators.length) {
-            refreshIdGenerator();
-        }
-        addIdGenerator(method.getIdGenerator());
+        IdGenerator.ID_GENERATORS[order] = method.getIdGenerator();
     }
 
     public ResourceMethod findProfilingIncludeMethod(String className, String methodName, String descriptor) {
@@ -49,21 +42,6 @@ public class ResourceMethodManager {
             }
         }
         return null;
-    }
-
-    private synchronized void refreshIdGenerator() {
-        IdGenerator[] generators = new IdGenerator[idGenerators.length * 2];
-        int i = 0;
-        for (IdGenerator idGenerator : idGenerators) {
-            generators[i++] = idGenerator;
-        }
-        idGenerators = generators;
-    }
-
-    private synchronized void addIdGenerator(IdGenerator idGenerator) {
-        if (generatorIndexes.add(idGenerator.getOrder())) {
-            idGenerators[generatorIndexes.size() - 1] = idGenerator;
-        }
     }
 
     public Map<String, String> buildResourceTypeMappings() {
@@ -127,16 +105,18 @@ public class ResourceMethodManager {
         selectedResourceTypes = selectedProfilingIncludeMethods.stream().map(ResourceMethod::getResourceType).collect(Collectors.toSet());
     }
 
+    public ResourceMethod findResourceMethodByMethodPath(String methodPath) {
+        return methodPathResourceMappings.get(methodPath);
+    }
+
     public Set<String> getSelectedResourceTypes() {
         return selectedResourceTypes;
     }
 
     public static void destroy() {
         if (INSTANCE != null) {
-            INSTANCE.generatorIndexes = null;
             INSTANCE.allProfilingIncludeMethods = null;
             INSTANCE.selectedProfilingIncludeMethods = null;
-            INSTANCE.idGenerators = null;
             INSTANCE.tracingMethods = null;
             INSTANCE = null;
         }

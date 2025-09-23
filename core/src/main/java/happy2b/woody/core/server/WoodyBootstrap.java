@@ -8,6 +8,7 @@ import happy2b.woody.core.command.CommandExecutors;
 import happy2b.woody.core.config.Configure;
 import happy2b.woody.core.flame.manager.*;
 import happy2b.woody.core.flame.resource.transform.ResourceMethodAdvice;
+import happy2b.woody.core.manager.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -190,6 +191,8 @@ public class WoodyBootstrap {
         ResourceFetcherManager.destroy();
         ResourceMethodAdvice.destroy();
         ResourceMethodManager.destroy();
+        FunctionManager.destroy();
+        IdGeneratorManager.destroy();
         TraceManager.destroy();
         ClientInactivityMonitor.destroy();
         WoodyServerHandler.destroy();

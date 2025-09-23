@@ -1,5 +1,6 @@
 package happy2b.woody.core.flame.manager;
 
+import happy2b.woody.common.api.id.IdGenerator;
 import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.common.dto.ProfilingSpan;
@@ -46,6 +47,9 @@ public class TraceManager {
 
     public static SpyAPI.ITrace startProfilingTrace(Long tid, String resource, String type, String methodPath, Object traceId) {
         if (profiling_status == TracingState.ON_TRACING && ResourceMethodManager.INSTANCE.selectedResourceTypes.contains(type)) {
+            if (traceId == null) {
+                traceId = IdGenerator.INSTANCE.generateTraceId();
+            }
             ProfilingTrace profilingTrace = new ProfilingTrace(resource, type, methodPath, traceId);
             PROFILING_TRACES.computeIfAbsent(tid, thread1 -> new ProfilingTraces()).startProfilingTrace(profilingTrace);
             return profilingTrace;

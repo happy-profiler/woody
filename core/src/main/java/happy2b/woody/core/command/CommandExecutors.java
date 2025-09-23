@@ -20,6 +20,8 @@ public abstract class CommandExecutors {
         WOODY_COMMANDS.add(new PECommandExecutor());
         WOODY_COMMANDS.add(new PFCommandExecutor());
         WOODY_COMMANDS.add(new TSCommandExecutor());
+        WOODY_COMMANDS.add(new FNCommandExecutor());
+        WOODY_COMMANDS.add(new IGCommandExecutor());
     }
 
     public static WoodyCommand execute(String cmdEval) {

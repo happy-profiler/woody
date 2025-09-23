@@ -32,11 +32,7 @@
                 <artifactId>woody-common</artifactId>
                 <version>${project.versions}</version>
             </dependency>
-            <dependency>
-                <groupId>happy2b</groupId>
-                <artifactId>code-analyzing</artifactId>
-                <version>${project.versions}</version>
-            </dependency>
+
             <dependency>
                 <groupId>happy2b</groupId>
                 <artifactId>woody-boot</artifactId>

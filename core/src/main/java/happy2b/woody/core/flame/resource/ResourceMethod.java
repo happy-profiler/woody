@@ -3,6 +3,8 @@ package happy2b.woody.core.flame.resource;
 
 import happy2b.woody.common.utils.MethodUtil;
 import happy2b.woody.common.api.id.IdGenerator;
+import happy2b.woody.core.common.CustomizeIdGenerator;
+import happy2b.woody.common.api.FunctionTokenExecutor;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -22,13 +24,10 @@ public class ResourceMethod {
     private String resourceType;
     private String resource;
 
-    private IdGenerator idGenerator;
+    private IdGenerator idGenerator = IdGenerator.INSTANCE;
+    private FunctionTokenExecutor[] functionTokenExecutors;
 
     public ResourceMethod(String resourceType, String resource, Method method) {
-        this(resourceType, resource, method, IdGenerator.INSTANCE);
-    }
-
-    public ResourceMethod(String resourceType, String resource, Method method, IdGenerator idGenerator) {
         this.resourceType = resourceType;
         this.resource = resource;
         this.methodName = method.getName();
@@ -36,7 +35,6 @@ public class ResourceMethod {
         this.methodPath = method.getDeclaringClass().getName() + "." + method.getName();
         this.clazz = method.getDeclaringClass();
         this.descriptor = MethodUtil.getMethodDescriptor(method);
-        this.idGenerator = idGenerator;
     }
 
     public int getOrder() {
@@ -66,6 +64,13 @@ public class ResourceMethod {
         return resourceType;
     }
 
+    public void setIdGenerator(IdGenerator idGenerator) {
+        this.functionTokenExecutors = null;
+        if (idGenerator instanceof CustomizeIdGenerator) {
+            this.functionTokenExecutors = parseExpression((CustomizeIdGenerator) idGenerator);
+        }
+        this.idGenerator = idGenerator;
+    }
 
     public IdGenerator getIdGenerator() {
         return idGenerator;
@@ -83,6 +88,10 @@ public class ResourceMethod {
         return methodPath;
     }
 
+    public FunctionTokenExecutor[] getFunctionTokenExecutors() {
+        return functionTokenExecutors;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -93,5 +102,15 @@ public class ResourceMethod {
     @Override
     public int hashCode() {
         return Objects.hash(order, clazz, methodName, descriptor, method, methodPath, resourceType, resource);
+    }
+
+    private FunctionTokenExecutor[] parseExpression(CustomizeIdGenerator idGenerator) {
+        int index = idGenerator.paramIndex();
+        Class<?>[] types = method.getParameterTypes();
+        if (types.length < index) {
+            throw new IllegalArgumentException("Invalid param index: " + index + " for method: " + method);
+        }
+        Class paramType = types[index];
+        return idGenerator.getFunction().parseExpression(paramType);
     }
 }

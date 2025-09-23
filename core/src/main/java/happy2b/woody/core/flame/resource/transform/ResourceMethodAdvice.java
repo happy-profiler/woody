@@ -1,9 +1,11 @@
 package happy2b.woody.core.flame.resource.transform;
 
+import happy2b.woody.common.api.id.IdGenerator;
 import happy2b.woody.common.api.id.ParametricIdGenerator;
 import happy2b.woody.common.reflection.ReflectionUtils;
 import happy2b.woody.core.flame.manager.ResourceMethodManager;
 import happy2b.woody.core.flame.manager.TraceManager;
+import happy2b.woody.core.flame.resource.ResourceMethod;
 
 import java.woody.SpyAPI;
 import java.lang.reflect.Method;
@@ -38,21 +40,23 @@ public class ResourceMethodAdvice extends SpyAPI.AbstractSpy {
     }
 
     public SpyAPI.ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex) {
-        return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, ResourceMethodManager.INSTANCE.idGenerators[generatorIndex].generateTraceId());
+        return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, IdGenerator.ID_GENERATORS[generatorIndex].generateTraceId());
     }
 
-    public SpyAPI.ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex, Object param) {
-        ParametricIdGenerator idGenerator = (ParametricIdGenerator) ResourceMethodManager.INSTANCE.idGenerators[generatorIndex];
-        return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, idGenerator.generateTraceId(param));
+    public SpyAPI.ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex, Object target) {
+        ParametricIdGenerator idGenerator = (ParametricIdGenerator) IdGenerator.ID_GENERATORS[generatorIndex];
+        ResourceMethod resourceMethod = ResourceMethodManager.INSTANCE.findResourceMethodByMethodPath(methodPath);
+        return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, idGenerator.generateTraceId(target, resourceMethod.getFunctionTokenExecutors()));
     }
 
     public SpyAPI.ISpan startSpan(String operationName, String methodPath, int generatorIndex) {
-        return TraceManager.startProfilingSpan(Thread.currentThread().getId(), ResourceMethodManager.INSTANCE.idGenerators[generatorIndex].generateSpanId(), System.nanoTime(), operationName);
+        return TraceManager.startProfilingSpan(Thread.currentThread().getId(), IdGenerator.ID_GENERATORS[generatorIndex].generateSpanId(), System.nanoTime(), operationName);
     }
 
     public SpyAPI.ISpan startSpan(String operationName, String methodPath, int generatorIndex, Object param) {
-        ParametricIdGenerator idGenerator = (ParametricIdGenerator) ResourceMethodManager.INSTANCE.idGenerators[generatorIndex];
-        return TraceManager.startProfilingSpan(Thread.currentThread().getId(), idGenerator.generateSpanId(param), System.nanoTime(), operationName);
+        ParametricIdGenerator idGenerator = (ParametricIdGenerator) IdGenerator.ID_GENERATORS[generatorIndex];
+        ResourceMethod resourceMethod = ResourceMethodManager.INSTANCE.findResourceMethodByMethodPath(methodPath);
+        return TraceManager.startProfilingSpan(Thread.currentThread().getId(), idGenerator.generateSpanId(param, resourceMethod.getFunctionTokenExecutors()), System.nanoTime(), operationName);
     }
 
     public static void destroy() {

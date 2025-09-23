@@ -63,11 +63,11 @@ public class SpyAPI {
     public static abstract class AbstractSpy {
         public abstract ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex);
 
-        public abstract ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex, Object param);
+        public abstract ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex, Object target);
 
         public abstract ISpan startSpan(String operationName, String methodPath, int generatorIndex);
 
-        public abstract ISpan startSpan(String operationName, String methodPath, int generatorIndex, Object param);
+        public abstract ISpan startSpan(String operationName, String methodPath, int generatorIndex, Object target);
     }
 
     public interface ITrace {

@@ -1,9 +1,11 @@
 package happy2b.woody.core.command;
 
 import happy2b.woody.common.api.WoodyCommand;
+import happy2b.woody.common.api.id.IdGenerator;
 import happy2b.woody.core.flame.common.constant.ProfilingResourceType;
 import happy2b.woody.core.flame.manager.ResourceFetcherManager;
 import happy2b.woody.core.flame.resource.ResourceMethod;
+import happy2b.woody.core.manager.IdGeneratorManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,8 +16,9 @@ import java.util.stream.Collectors;
  * @description: profiling resource
  * -ls(list resource) / -lt(list resource type) / -lss(list select resource) / -lst(list select type)
  * -us(unselect) / -s(select)
- * --type 'kafka'
- * --order '1,2,3'
+ * --type kafka
+ * --order 1,2,3
+ * --id(id generator index) 1
  * @since 2025/8/25
  */
 public class PRCommandExecutor implements WoodyCommandExecutor {
@@ -36,6 +39,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
     @Override
     public void executeInternal(WoodyCommand command) {
         int opCount = 0;
+        IdGenerator idGenerator = IdGenerator.INSTANCE;
         String type = null;
         String orderSegment = null;
         boolean select = false, unselect = false;
@@ -80,6 +84,17 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
                     return;
                 }
                 orderSegment = segments[++i].trim();
+            } else if (segment.equals("--id")) {
+                if (i == segments.length - 1) {
+                    command.error("missing profiling resource 'id generator index'!");
+                    return;
+                }
+                int idGeneratorIndex = Integer.parseInt(segments[++i].trim());
+                idGenerator = IdGeneratorManager.INSTANCE.findIdGenerator(idGeneratorIndex);
+                if (idGenerator == null) {
+                    command.error("invalid profiling resource id generator index :" + idGenerator + " !");
+                    return;
+                }
             } else {
                 command.error("profiling event type not support other arguments!");
                 return;
@@ -112,7 +127,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
         }
 
         if (select) {
-            selectResources(command, type, orderSegment);
+            selectResources(command, type, orderSegment, idGenerator);
             return;
         }
 
@@ -173,9 +188,9 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
         command.result("[" + ResourceFetcherManager.INSTANCE.listSelectedResourceTypes().stream().collect(Collectors.joining(",")) + "]");
     }
 
-    private void selectResources(WoodyCommand command, String type, String orderSegment) {
+    private void selectResources(WoodyCommand command, String type, String orderSegment, IdGenerator idGenerator) {
         if (orderSegment == null) {
-            ResourceFetcherManager.INSTANCE.selectResources(type);
+            ResourceFetcherManager.INSTANCE.selectResources(idGenerator, type);
         } else {
             List<Integer> orders = null;
             if (orderSegment != null) {
@@ -191,7 +206,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
                     orders.add(i);
                 }
             }
-            ResourceFetcherManager.INSTANCE.selectResources(type, orders);
+            ResourceFetcherManager.INSTANCE.selectResources(idGenerator, type, orders);
         }
         command.result("select profiling resource success!");
     }
@@ -215,7 +230,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
         sb.append(type).append(":\n");
         for (ResourceMethod method : sortedMethods) {
             String order = String.format("%3d", method.getOrder());
-            sb.append("  ").append(order).append(". ").append(method.getResource()).append("\n");
+            sb.append("  ").append(order).append(". ").append(method.getResource()).append(", id generator: ").append(method.getIdGenerator().getOrder()).append("\n");
         }
     }
 }

@@ -1,5 +1,6 @@
 package happy2b.woody.core.flame.manager;
 
+import happy2b.woody.common.api.id.IdGenerator;
 import happy2b.woody.common.bytecode.InstrumentationUtils;
 import happy2b.woody.core.flame.resource.ResourceMethod;
 import happy2b.woody.core.flame.resource.fetch.ResourceFetcher;
@@ -39,7 +40,7 @@ public class ResourceFetcherManager {
         return ResourceMethodManager.INSTANCE.getSelectedResourceTypes();
     }
 
-    public void selectResources(String... resourceTypes) {
+    public void selectResources(IdGenerator idGenerator, String... resourceTypes) {
         for (String resourceType : resourceTypes) {
             ResourceFetcher fetcher = allResourceFetchers.get(resourceType);
             if (fetcher == null) {
@@ -55,11 +56,16 @@ public class ResourceFetcherManager {
                 }
                 methods = ResourceMethodManager.INSTANCE.getResourceByType(resourceType);
             }
+
+            for (ResourceMethod method : methods) {
+                method.setIdGenerator(idGenerator);
+            }
+
             ResourceMethodManager.INSTANCE.addSelectedResourceMethod(methods);
         }
     }
 
-    public void selectResources(String resourceType, List<Integer> orders) {
+    public void selectResources(IdGenerator idGenerator, String resourceType, List<Integer> orders) {
         if (!allResourceFetchers.containsKey(resourceType)) {
             throw new IllegalArgumentException("resourceType is not valid: " + resourceType);
         }
@@ -67,6 +73,7 @@ public class ResourceFetcherManager {
         for (ResourceMethod method : methods) {
             for (Integer order : orders) {
                 if (method.getOrder() == order) {
+                    method.setIdGenerator(idGenerator);
                     ResourceMethodManager.INSTANCE.addSelectedResourceMethod(method);
                 }
             }

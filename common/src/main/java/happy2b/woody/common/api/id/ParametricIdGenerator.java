@@ -1,10 +1,12 @@
 package happy2b.woody.common.api.id;
 
+import happy2b.woody.common.api.FunctionTokenExecutor;
+
 public interface ParametricIdGenerator<T> extends IdGenerator {
 
-    T generateTraceId(Object param);
+    T generateTraceId(Object param, FunctionTokenExecutor[] executors);
 
-    T generateSpanId(Object param);
+    T generateSpanId(Object param, FunctionTokenExecutor[] executors);
 
     /**
      * 参数索引, 从0开始
