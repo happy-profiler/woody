@@ -205,8 +205,11 @@ public class TSCommandExecutor implements WoodyCommandExecutor {
         Map<Object, List<ProfilingSample>> groupedSamples = samples.stream().filter(profilingSample -> profilingSample.getTraceId() != null).collect(Collectors.groupingBy(profilingSample -> profilingSample.getTraceId()));
         List<List<ProfilingSample>> flatSamples = new ArrayList<>(groupedSamples.values());
         sortProfilingSamples(flatSamples);
-        List<List<ProfilingSample>> lists = flatSamples.subList(0, topN);
-        return lists;
+        if (topN > flatSamples.size()) {
+            return flatSamples;
+        } else {
+            return flatSamples.subList(0, topN);
+        }
     }
 
     private String formatSamples(List<ProfilingSample> samples) {

@@ -10,7 +10,6 @@ public class ThreadLocalRandomIdGenerator implements IdGenerator<Long> {
 
     public ThreadLocalRandomIdGenerator() {
         this.order = ORDER.incrementAndGet();
-        ID_GENERATORS[order] = this;
     }
 
     @Override

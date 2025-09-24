@@ -30,7 +30,7 @@ public class FieldOrMapTokenExecutor implements FunctionTokenExecutor {
         if (target == null) {
             return null;
         }
-        if (!target.getClass().isAssignableFrom(Map.class)) {
+        if (!Map.class.isAssignableFrom(target.getClass())) {
             if (fieldExists == null) {
                 fieldExists = ReflectionUtils.existsField(target, token);
             }
@@ -41,12 +41,11 @@ public class FieldOrMapTokenExecutor implements FunctionTokenExecutor {
             }
         }
         if (tokenType == null) {
-            Type superType = target.getClass().getGenericSuperclass();
-            if (superType instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) superType;
-                Type[] actualTypes = parameterizedType.getActualTypeArguments();
-                tokenType = actualTypes[0];
+            Map map = (Map) target;
+            if (map.isEmpty()) {
+                return null;
             }
+            tokenType = map.keySet().iterator().next().getClass();
             if (tokenType == String.class) {
                 tokenValue = token.toString();
             } else if (tokenType == Integer.class) {

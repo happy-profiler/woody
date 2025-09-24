@@ -183,7 +183,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
             Set<ResourceMethod> methods = ResourceFetcherManager.INSTANCE.listSelectedResources(type);
             appendResourceFormatString(sb, type, methods);
         }
-        command.result("[" + sb.toString().trim() + "]");
+        command.result(sb.toString().trim());
     }
 
     private void listSelectedResourceTypes(WoodyCommand command) {

@@ -240,7 +240,7 @@ public class WoodyFunction {
         if (token.endsWith(")") && token.contains("(")) {
             String methodName = token.substring(0, token.indexOf("("));
             String params = token.substring(token.indexOf("(") + 1, token.length() - 1).trim();
-            return new MethodTokenExecutor(methodName, params.split(","));
+            return new MethodTokenExecutor(methodName, params);
         }
         return new FieldOrMapTokenExecutor(token);
     }

@@ -40,23 +40,39 @@ public class ResourceMethodAdvice extends SpyAPI.AbstractSpy {
     }
 
     public SpyAPI.ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex) {
-        return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, IdGenerator.ID_GENERATORS[generatorIndex].generateTraceId());
+        try {
+            return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, IdGenerator.ID_GENERATORS[generatorIndex].generateTraceId());
+        } catch (Throwable t) {
+            return SpyAPI.NO_OP_TRACE;
+        }
     }
 
     public SpyAPI.ITrace startTrace(String resourceType, String resource, String methodPath, int generatorIndex, Object target) {
-        ParametricIdGenerator idGenerator = (ParametricIdGenerator) IdGenerator.ID_GENERATORS[generatorIndex];
-        ResourceMethod resourceMethod = ResourceMethodManager.INSTANCE.findResourceMethodByMethodPath(methodPath);
-        return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, idGenerator.generateTraceId(target, resourceMethod.getFunctionTokenExecutors()));
+        try {
+            ParametricIdGenerator idGenerator = (ParametricIdGenerator) IdGenerator.ID_GENERATORS[generatorIndex];
+            ResourceMethod resourceMethod = ResourceMethodManager.INSTANCE.findResourceMethodByMethodPath(methodPath);
+            return TraceManager.startProfilingTrace(Thread.currentThread().getId(), resource, resourceType, methodPath, idGenerator.generateTraceId(target, resourceMethod.getFunctionTokenExecutors()));
+        } catch (Throwable t) {
+            return SpyAPI.NO_OP_TRACE;
+        }
     }
 
     public SpyAPI.ISpan startSpan(String operationName, String methodPath, int generatorIndex) {
-        return TraceManager.startProfilingSpan(Thread.currentThread().getId(), IdGenerator.ID_GENERATORS[generatorIndex].generateSpanId(), System.nanoTime(), operationName);
+        try {
+            return TraceManager.startProfilingSpan(Thread.currentThread().getId(), IdGenerator.ID_GENERATORS[generatorIndex].generateSpanId(), System.nanoTime(), operationName);
+        } catch (Throwable t) {
+            return SpyAPI.NO_OP_SPAN;
+        }
     }
 
     public SpyAPI.ISpan startSpan(String operationName, String methodPath, int generatorIndex, Object param) {
-        ParametricIdGenerator idGenerator = (ParametricIdGenerator) IdGenerator.ID_GENERATORS[generatorIndex];
-        ResourceMethod resourceMethod = ResourceMethodManager.INSTANCE.findResourceMethodByMethodPath(methodPath);
-        return TraceManager.startProfilingSpan(Thread.currentThread().getId(), idGenerator.generateSpanId(param, resourceMethod.getFunctionTokenExecutors()), System.nanoTime(), operationName);
+        try {
+            ParametricIdGenerator idGenerator = (ParametricIdGenerator) IdGenerator.ID_GENERATORS[generatorIndex];
+            ResourceMethod resourceMethod = ResourceMethodManager.INSTANCE.findResourceMethodByMethodPath(methodPath);
+            return TraceManager.startProfilingSpan(Thread.currentThread().getId(), idGenerator.generateSpanId(param, resourceMethod.getFunctionTokenExecutors()), System.nanoTime(), operationName);
+        } catch (Throwable t) {
+            return SpyAPI.NO_OP_SPAN;
+        }
     }
 
     public static void destroy() {

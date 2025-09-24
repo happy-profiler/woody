@@ -93,6 +93,10 @@ public class IGCommandExecutor implements WoodyCommandExecutor {
         }
 
         if (create) {
+            if (funcOrder == -1) {
+                command.error("no function order specified!");
+                return;
+            }
             if (target.startsWith("param[")) {
                 int paramIndex = Integer.parseInt(target.substring(6, target.length() - 1));
                 int order = IdGeneratorManager.INSTANCE.createIdGenerator(paramIndex, FunctionManager.INSTANCE.findFunction(funcOrder));

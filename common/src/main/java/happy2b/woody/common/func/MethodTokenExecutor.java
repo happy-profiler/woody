@@ -23,9 +23,13 @@ public class MethodTokenExecutor implements FunctionTokenExecutor {
     private Method method;
     private Object[] convertedParams;
 
-    public MethodTokenExecutor(String name, String[] params) {
+    public MethodTokenExecutor(String name, String params) {
         this.name = name;
-        this.params = params;
+        if (params == null || params.isEmpty()) {
+            this.params = new String[0];
+        } else {
+            this.params = params.split(",");
+        }
     }
 
     @Override
