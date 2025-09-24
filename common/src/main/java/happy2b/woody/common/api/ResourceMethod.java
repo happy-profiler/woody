@@ -3,10 +3,12 @@ package happy2b.woody.common.api;
 
 import happy2b.woody.common.id.CustomizeIdGenerator;
 import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
+import happy2b.woody.common.id.TimeBasedIdGenerator;
 import happy2b.woody.common.utils.MethodUtil;
 import happy2b.woody.common.id.IdGenerator;
 
 import java.lang.reflect.Method;
+import java.sql.Time;
 import java.util.Objects;
 
 public class ResourceMethod {
@@ -24,7 +26,7 @@ public class ResourceMethod {
     private String resourceType;
     private String resource;
 
-    private IdGenerator idGenerator = ThreadLocalRandomIdGenerator.INSTANCE;
+    private IdGenerator idGenerator = TimeBasedIdGenerator.INSTANCE;
     private FunctionTokenExecutor[] functionTokenExecutors;
 
     public ResourceMethod(String resourceType, String resource, Method method) {

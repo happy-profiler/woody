@@ -5,6 +5,7 @@ import happy2b.woody.common.api.WoodyCommandExecutor;
 import happy2b.woody.common.id.IdGenerator;
 import happy2b.woody.common.constant.ProfilingResourceType;
 import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
+import happy2b.woody.common.id.TimeBasedIdGenerator;
 import happy2b.woody.core.manager.ResourceFetcherManager;
 import happy2b.woody.common.api.ResourceMethod;
 import happy2b.woody.core.manager.IdGeneratorManager;
@@ -41,7 +42,7 @@ public class PRCommandExecutor implements WoodyCommandExecutor {
     @Override
     public void executeInternal(WoodyCommand command) {
         int opCount = 0;
-        IdGenerator idGenerator = ThreadLocalRandomIdGenerator.INSTANCE;
+        IdGenerator idGenerator = TimeBasedIdGenerator.INSTANCE;
         String type = null;
         String orderSegment = null;
         boolean select = false, unselect = false;

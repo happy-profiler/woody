@@ -1,7 +1,7 @@
 package happy2b.woody.inst.core;
 
+import happy2b.woody.common.utils.InstrumentationUtils;
 import happy2b.woody.common.utils.MethodUtil;
-import happy2b.woody.common.bytecode.InstrumentationUtils;
 import happy2b.woody.common.api.Config;
 import happy2b.woody.common.api.InstrumentationProfiler;
 import happy2b.woody.inst.asm.MethodLineTransformer;

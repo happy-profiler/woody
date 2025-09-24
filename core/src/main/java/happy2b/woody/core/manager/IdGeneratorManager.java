@@ -1,9 +1,10 @@
 package happy2b.woody.core.manager;
 
-import happy2b.woody.common.id.IdGenerator;
-import happy2b.woody.common.id.CustomizeIdGenerator;
 import happy2b.woody.common.func.WoodyFunction;
+import happy2b.woody.common.id.CustomizeIdGenerator;
+import happy2b.woody.common.id.IdGenerator;
 import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
+import happy2b.woody.common.id.TimeBasedIdGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,8 @@ public class IdGeneratorManager {
     private AtomicInteger sequence = new AtomicInteger(1);
 
     public IdGeneratorManager() {
-        IdGenerator.ID_GENERATORS[0] = ThreadLocalRandomIdGenerator.INSTANCE;
+        IdGenerator.ID_GENERATORS[0] = TimeBasedIdGenerator.INSTANCE;
+        IdGenerator.ID_GENERATORS[1] = ThreadLocalRandomIdGenerator.INSTANCE;
     }
 
     public int createIdGenerator(int paramIndex, WoodyFunction function) {

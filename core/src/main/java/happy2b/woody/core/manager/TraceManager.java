@@ -1,12 +1,11 @@
 package happy2b.woody.core.manager;
 
-import happy2b.woody.common.id.IdGenerator;
-import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
-import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.common.constant.ProfilingResourceType;
 import happy2b.woody.common.dto.ProfilingSpan;
 import happy2b.woody.common.dto.ProfilingTrace;
 import happy2b.woody.common.dto.ProfilingTraces;
+import happy2b.woody.common.id.TimeBasedIdGenerator;
+import happy2b.woody.common.utils.WoodyLog;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -49,7 +48,7 @@ public class TraceManager {
     public static SpyAPI.ITrace startProfilingTrace(Long tid, String resource, String type, String methodPath, Object traceId) {
         if (profiling_status == TracingState.ON_TRACING && ResourceMethodManager.INSTANCE.selectedResourceTypes.contains(type)) {
             if (traceId == null) {
-                traceId = ThreadLocalRandomIdGenerator.INSTANCE.generateTraceId();
+                traceId = TimeBasedIdGenerator.INSTANCE.generateTraceId();
             }
             ProfilingTrace profilingTrace = new ProfilingTrace(resource, type, methodPath, traceId);
             PROFILING_TRACES.computeIfAbsent(tid, thread1 -> new ProfilingTraces()).startProfilingTrace(profilingTrace);

@@ -10,11 +10,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>spy</module>
-        <module>code-analyzing</module>
         <module>common</module>
         <module>core</module>
         <module>agent</module>
         <module>boot</module>
+        <module>code-analyzing</module>
     </modules>
 
     <properties>

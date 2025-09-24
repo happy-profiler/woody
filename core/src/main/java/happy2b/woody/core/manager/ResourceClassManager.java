@@ -1,6 +1,6 @@
 package happy2b.woody.core.manager;
 
-import happy2b.woody.common.bytecode.InstrumentationUtils;
+import happy2b.woody.common.utils.InstrumentationUtils;
 import happy2b.woody.common.utils.WoodyLog;
 import happy2b.woody.core.transform.ResourceMethodTransformer;
 

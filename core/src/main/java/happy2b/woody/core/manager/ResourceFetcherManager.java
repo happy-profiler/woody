@@ -1,7 +1,7 @@
 package happy2b.woody.core.manager;
 
 import happy2b.woody.common.id.IdGenerator;
-import happy2b.woody.common.bytecode.InstrumentationUtils;
+import happy2b.woody.common.utils.InstrumentationUtils;
 import happy2b.woody.common.api.ResourceMethod;
 import happy2b.woody.common.api.ResourceFetcher;
 import happy2b.woody.core.fetcher.*;
