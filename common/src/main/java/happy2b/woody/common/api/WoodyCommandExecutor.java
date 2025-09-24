@@ -28,7 +28,7 @@ public interface WoodyCommandExecutor {
 
     default String buildFailedMessage(String command, Throwable t) {
         WoodyLog.error(t);
-        return "执行命令:'" + command + "’失败,失败信息:" + t.getMessage() + ", 相信错误 信息请查看${user.home}/.woody/woody.log文件";
+        return "执行命令:'" + command + "’失败,失败信息:" + t.getMessage() + ", 相信错误 信息请查看${user.home}/logs/woody/woody.log文件";
     }
 
 }
