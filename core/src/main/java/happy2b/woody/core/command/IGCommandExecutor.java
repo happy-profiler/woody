@@ -1,8 +1,9 @@
 package happy2b.woody.core.command;
 
 import happy2b.woody.common.api.WoodyCommand;
-import happy2b.woody.core.common.CustomizeIdGenerator;
-import happy2b.woody.core.common.func.WoodyFunction;
+import happy2b.woody.common.api.WoodyCommandExecutor;
+import happy2b.woody.common.id.CustomizeIdGenerator;
+import happy2b.woody.common.func.WoodyFunction;
 import happy2b.woody.core.manager.FunctionManager;
 import happy2b.woody.core.manager.IdGeneratorManager;
 
@@ -120,7 +121,7 @@ public class IGCommandExecutor implements WoodyCommandExecutor {
         generators.sort(Comparator.comparingInt(CustomizeIdGenerator::getOrder));
 
         StringBuilder sb = new StringBuilder("woody id generators:").append("\n");
-        sb.append(0).append(": ThreadLocalRandom TraceId Generator");
+        sb.append(0).append(": ThreadLocalRandom TraceId Generator").append("\n");
         for (CustomizeIdGenerator generator : generators) {
             sb.append(generator.getOrder()).append(": fn-order:").append(generator.getOrder()).append(", fn-exp:").append(generator.getFunction().getExpression()).append("\n");
         }

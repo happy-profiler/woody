@@ -5,7 +5,7 @@
 
 package happy2b.woody.core.tool.jni;
 
-import happy2b.woody.core.flame.resource.ResourceMethod;
+import happy2b.woody.common.api.ResourceMethod;
 
 import java.util.List;
 import java.util.Map;

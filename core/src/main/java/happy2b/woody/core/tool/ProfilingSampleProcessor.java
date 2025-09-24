@@ -1,7 +1,10 @@
 package happy2b.woody.core.tool;
 
-import happy2b.woody.core.flame.common.dto.*;
-import happy2b.woody.core.flame.manager.ResourceMethodManager;
+import happy2b.woody.common.dto.ProfilingSample;
+import happy2b.woody.common.dto.ProfilingSampleBase;
+import happy2b.woody.common.dto.ProfilingTrace;
+import happy2b.woody.common.dto.ProfilingTraces;
+import happy2b.woody.core.manager.ResourceMethodManager;
 
 import java.util.*;
 

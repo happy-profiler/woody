@@ -1,8 +1,8 @@
 package happy2b.woody.core.manager;
 
-import happy2b.woody.common.api.id.IdGenerator;
-import happy2b.woody.core.common.CustomizeIdGenerator;
-import happy2b.woody.core.common.func.WoodyFunction;
+import happy2b.woody.common.id.IdGenerator;
+import happy2b.woody.common.id.CustomizeIdGenerator;
+import happy2b.woody.common.func.WoodyFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

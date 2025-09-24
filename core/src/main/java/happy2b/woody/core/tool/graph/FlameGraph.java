@@ -5,8 +5,8 @@
 
 package happy2b.woody.core.tool.graph;
 
-import happy2b.woody.core.flame.common.dto.ProfilingSample;
-import happy2b.woody.core.flame.common.dto.ProfilingSampleBase;
+import happy2b.woody.common.dto.ProfilingSample;
+import happy2b.woody.common.dto.ProfilingSampleBase;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

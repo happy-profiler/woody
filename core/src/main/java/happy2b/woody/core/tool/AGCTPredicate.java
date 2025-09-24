@@ -1,6 +1,6 @@
 package happy2b.woody.core.tool;
 
-import happy2b.woody.core.flame.manager.ResourceMethodManager;
+import happy2b.woody.core.manager.ResourceMethodManager;
 
 
 /**

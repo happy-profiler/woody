@@ -1,6 +1,6 @@
 package happy2b.woody.core.manager;
 
-import happy2b.woody.core.common.func.WoodyFunction;
+import happy2b.woody.common.func.WoodyFunction;
 
 import java.util.Comparator;
 import java.util.List;

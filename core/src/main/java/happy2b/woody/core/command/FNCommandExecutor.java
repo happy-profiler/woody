@@ -1,7 +1,8 @@
 package happy2b.woody.core.command;
 
 import happy2b.woody.common.api.WoodyCommand;
-import happy2b.woody.core.common.func.WoodyFunction;
+import happy2b.woody.common.api.WoodyCommandExecutor;
+import happy2b.woody.common.func.WoodyFunction;
 import happy2b.woody.core.manager.FunctionManager;
 
 import java.util.List;

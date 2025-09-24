@@ -5,7 +5,7 @@
 
 package happy2b.woody.core.tool.jni;
 
-import happy2b.woody.core.flame.resource.ResourceMethod;
+import happy2b.woody.common.api.ResourceMethod;
 
 import java.io.File;
 import java.io.FileOutputStream;

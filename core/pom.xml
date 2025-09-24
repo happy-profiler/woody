@@ -33,11 +33,6 @@
         </dependency>
 
         <dependency>
-            <groupId>happy2b</groupId>
-            <artifactId>woody-spy</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport</artifactId>
         </dependency>
