@@ -1,8 +1,8 @@
 # Woody：Java应用性能诊断分析工具
 
 Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开发者
-1. 定位定位高GC频率问题，识别内存分配热点
-2. 分析CPUCPU使用率过高的代码路径
+1. 定位高GC频率问题，识别内存分配热点
+2. 分析CPU使用率过高的代码路径
 3. 追踪接口耗时瓶颈，定位内部操作耗时占比
 4. 诊断锁竞争问题，支持精准优化
 5. 针对特定业务接口/请求的性能问题（CPU、内存、耗时）进行深度分析
@@ -18,10 +18,9 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 ## 核心特性
 
 - 基于命令行交互，集成async-profiler生成采样样本和火焰图
-- 实现业务请求与火焰图样本的精确关联
+- 实现业务请求与火焰图样本的精确关联，可自定义表达式取请求参数属性生成请求id
 - 支持手动过滤无关业务入口，提高采样精准率
 - 极低性能损耗，适合生产环境使用
-- 代码少量借鉴自Arthas
 
 ## 支持中间件
 
@@ -48,6 +47,40 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 
 单横杠`-`表示命令操作，双横杠`--`表示参数，后续要接参数值
 
+### fn（Function）- 自定义函数命令
+
+用于定义表达式，实现**业务上下文过滤**或**自定义traceId生成**，支持灵活适配不同业务场景的参数提取与筛选需求。
+
+| 参数 | 说明 |
+|------|------|
+| -n | 新建自定义函数（需配合--exp参数） |
+| -l | 列举已创建的所有自定义函数（展示函数类型、表达式、创建时间） |
+| -c | 清空所有已创建的自定义函数 |
+| -b | 标记函数类型为“布尔过滤型”<br>（未指定此参数时，函数默认为“取值生成型”，用于生成traceId） |
+| --exp | 自定义表达式（必须以两个`##`开头），根据函数类型不同，表达式格式有差异：<br>1. 取值生成型（默认，用于生成traceId）：<br>   - 格式：`##[参数下标].属性/方法(参数1,参数2)`，支持多层递进<br>   - 示例1：`##[0].orderId`（提取第0个请求参数的orderId属性）<br>   - 示例2：`##[1].getHeader("serviceId")`（调用第1个参数的getHeader方法，传入"serviceId"参数）<br>   - 示例3：`##this.getService(null)`（调用当前入口对象的getService方法，传入null参数）<br>2. 布尔过滤型（需加`-b`）：<br>   - 格式：`##属性/参数对比逻辑`，暂不支持`&&`/`||`等逻辑连接符<br>   - 示例1：`##[0].status == 101`（筛选第0个参数status为101的请求）<br>   - 示例2：`##this.moduleName == 'payment'`（筛选当前入口对象moduleName为"payment"的请求）<br>   - 示例3：`##[0].userId == #target[1].creatorId`（对比第0个参数的userId与第1个参数的creatorId是否相等） |
+
+> 注意：函数创建后立即生效，后续的性能采样会自动应用已定义的“过滤型函数”筛选请求，“取值型函数”可配合`ig`命令用于traceId生成。
+
+<img width="1172" height="224" alt="image" src="https://github.com/user-attachments/assets/ee7f537a-4604-4f4c-9337-c631396a8996" />
+
+
+### ig（ID Generator）- 自定义traceId生成器
+
+用于配置**traceId的生成来源**，支持关联已通过`fn`命令创建的自定义函数，实现业务化的traceId生成规则（替代默认的随机数traceId）。
+
+| 参数 | 说明 |
+|------|------|
+| -n | 新建traceId生成器（需配合--target和--fn参数） |
+| -l | 列举已配置的所有traceId生成器（展示目标对象、关联函数、生效状态） |
+| -c | 清空所有已配置的traceId生成器（清空后恢复默认随机数生成规则） |
+| --target | 指定traceId生成的“数据来源目标”，支持两种取值：<br> - `this`：表示当前业务入口对象（如SpringMVC的Controller实例、Dubbo的Provider实例）<br> - `param[index]`：表示业务请求的第N个参数（index为参数下标，如`param[0]`表示第1个参数） |
+| --fn | 指定关联的自定义函数序号（通过`fn -l`可查看已创建函数的序号）<br> - 仅支持关联“取值生成型”函数（即未加`-b`创建的fn函数）<br> - 生成traceId时，工具会自动调用该函数从`--target`指定的对象中提取值，作为最终的traceId |
+
+> 示例：若已通过`fn -n --exp ##[0].orderId`创建序号为1的“取值函数”，执行`ig -n --target param[0] --fn 1`后，后续请求的traceId将自动提取第0个参数的orderId属性，实现“订单号=traceId”的业务关联。
+
+<img width="1284" height="490" alt="image" src="https://github.com/user-attachments/assets/e6b95d1e-2b34-4dfa-bcba-f963f5b22664" />
+
+
 ### pr（profiling resource）- 选择分析的业务入口
 
 用于指定需要分析的业务入口资源，可同时选择多种中间件的多个入口。
@@ -62,8 +95,11 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 | -lss | 列举已选择的业务入口资源 |
 | --type | 指定中间件类型（支持上述5种类型） |
 | --order | 指定中间件业务入口的资源编号（多编号用英文逗号分隔）<br>不指定时表示选择该类型的所有入口资源 |
+| --id | 指定使用请求id生成器需要，默认是0，即用时间戳(微妙)生成请求id |
 
-<img width="600" height="1464" alt="image" src="https://github.com/user-attachments/assets/8ce2eb40-c15a-4beb-bdf1-3b40a779f34c" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/0afed170-f959-448c-b374-c66427c30ffc" />
+
+
 
 
 ### pe（profiling event）- 选择采集事件类型
@@ -83,7 +119,6 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 > 支持同时选择多个事件类型，将生成对应类型的火焰图
 
 <img width="600" height="270" alt="image" src="https://github.com/user-attachments/assets/1cdbc405-0eed-4457-b2e0-875dc1036b47" />
-
 
 
 ### pf（profiling）- 操作性能分析过程
@@ -122,6 +157,8 @@ Woody是一款专注于Java应用性能问题诊断的工具，旨在帮助开�
 <img width="600" height="1066" alt="image" src="https://github.com/user-attachments/assets/89720447-380c-4499-b734-8a59fc707e56" />
 <img width="600" height="154" alt="image" src="https://github.com/user-attachments/assets/96e5d097-18c0-4518-b5d3-c034d9f2b0cb" />
 <img width="600" height="1822" alt="image" src="https://github.com/user-attachments/assets/c9eb3f90-e282-4a4e-84f4-369e16fa36e7" />
+
+
 
 
 
