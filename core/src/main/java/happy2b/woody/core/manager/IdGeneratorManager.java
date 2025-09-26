@@ -20,8 +20,6 @@ public class IdGeneratorManager {
 
     public static IdGeneratorManager INSTANCE = new IdGeneratorManager();
 
-    private AtomicInteger sequence = new AtomicInteger(1);
-
     public IdGeneratorManager() {
         IdGenerator.ID_GENERATORS[0] = TimeBasedIdGenerator.INSTANCE;
         IdGenerator.ID_GENERATORS[1] = ThreadLocalRandomIdGenerator.INSTANCE;
