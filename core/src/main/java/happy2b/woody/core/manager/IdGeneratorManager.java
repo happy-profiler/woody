@@ -28,10 +28,9 @@ public class IdGeneratorManager {
     }
 
     public int createIdGenerator(int paramIndex, WoodyFunction function) {
-        int index = sequence.getAndIncrement();
         CustomizeIdGenerator generator = new CustomizeIdGenerator(paramIndex, function);
-        IdGenerator.ID_GENERATORS[index] = generator;
-        return index;
+        IdGenerator.ID_GENERATORS[generator.getOrder()] = generator;
+        return generator.getOrder();
     }
 
     public CustomizeIdGenerator findIdGenerator(int index) {
