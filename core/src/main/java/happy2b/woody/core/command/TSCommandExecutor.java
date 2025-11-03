@@ -144,6 +144,9 @@ public class TSCommandExecutor implements WoodyCommandExecutor {
             return;
         }
         if (list) {
+            if(id == null && topN == 0){
+                topN = 10;
+            }
             listTraceSample(command, event, topN, id);
             return;
         }

@@ -29,7 +29,7 @@ public class TimeBasedIdGenerator implements IdGenerator<Long> {
 
     @Override
     public int getOrder() {
-        return 0;
+        return order;
     }
 
 }

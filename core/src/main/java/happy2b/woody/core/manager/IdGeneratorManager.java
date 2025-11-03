@@ -1,10 +1,7 @@
 package happy2b.woody.core.manager;
 
 import happy2b.woody.common.func.WoodyFunction;
-import happy2b.woody.common.id.CustomizeIdGenerator;
-import happy2b.woody.common.id.IdGenerator;
-import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
-import happy2b.woody.common.id.TimeBasedIdGenerator;
+import happy2b.woody.common.id.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +18,9 @@ public class IdGeneratorManager {
     public static IdGeneratorManager INSTANCE = new IdGeneratorManager();
 
     public IdGeneratorManager() {
-        IdGenerator.ID_GENERATORS[0] = TimeBasedIdGenerator.INSTANCE;
-        IdGenerator.ID_GENERATORS[1] = ThreadLocalRandomIdGenerator.INSTANCE;
+        IdGenerator.ID_GENERATORS[TimeBasedIdGenerator.INSTANCE.getOrder()] = TimeBasedIdGenerator.INSTANCE;
+        IdGenerator.ID_GENERATORS[ThreadLocalRandomIdGenerator.INSTANCE.getOrder()] = ThreadLocalRandomIdGenerator.INSTANCE;
+        IdGenerator.ID_GENERATORS[OpenTelemetryIdExtractor.INSTANCE.getOrder()] = OpenTelemetryIdExtractor.INSTANCE;
     }
 
     public int createIdGenerator(int paramIndex, WoodyFunction function) {
@@ -31,8 +29,8 @@ public class IdGeneratorManager {
         return generator.getOrder();
     }
 
-    public CustomizeIdGenerator findIdGenerator(int index) {
-        return (CustomizeIdGenerator) IdGenerator.ID_GENERATORS[index];
+    public IdGenerator findIdGenerator(int index) {
+        return IdGenerator.ID_GENERATORS[index];
     }
 
     public void clearIdGenerators() {

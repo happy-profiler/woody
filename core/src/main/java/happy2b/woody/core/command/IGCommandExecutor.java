@@ -4,6 +4,7 @@ import happy2b.woody.common.api.WoodyCommand;
 import happy2b.woody.common.api.WoodyCommandExecutor;
 import happy2b.woody.common.id.CustomizeIdGenerator;
 import happy2b.woody.common.func.WoodyFunction;
+import happy2b.woody.common.id.OpenTelemetryIdExtractor;
 import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
 import happy2b.woody.common.id.TimeBasedIdGenerator;
 import happy2b.woody.core.manager.FunctionManager;
@@ -129,7 +130,8 @@ public class IGCommandExecutor implements WoodyCommandExecutor {
         StringBuilder sb = new StringBuilder("woody id generators:").append("\n");
 
         sb.append(TimeBasedIdGenerator.INSTANCE.getOrder()).append(": TimeBased TraceId Generator").append("\n");
-        sb.append(ThreadLocalRandomIdGenerator.INSTANCE.getOrder()).append(": ThreadLocalRandom TraceId Generator");
+        sb.append(ThreadLocalRandomIdGenerator.INSTANCE.getOrder()).append(": ThreadLocalRandom TraceId Generator").append("\n");
+        sb.append(OpenTelemetryIdExtractor.INSTANCE.getOrder()).append(": OpenTelemetry TraceId Extractor");
 
         for (CustomizeIdGenerator generator : generators) {
             sb.append("\n");
