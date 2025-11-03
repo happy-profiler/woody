@@ -1,5 +1,6 @@
 package happy2b.woody.core.fetcher;
 
+import happy2b.woody.common.api.Config;
 import happy2b.woody.common.api.ResourceMethod;
 import happy2b.woody.common.constant.ProfilingResourceType;
 import happy2b.woody.common.reflection.ReflectionUtils;
@@ -31,6 +32,7 @@ public class GrpcResourceFetcher extends AbstractResourceFetcher{
     @Override
     public void fetchResources(Class clazz) {
         try {
+            storeAppClassLoader(clazz);
             Object[] instances = AsyncProfiler.getInstance().getInstances(clazz, 3);
             if (instances == null || instances.length == 0) {
                 WoodyLog.error("Woody: Failed to fetch grpc '{}' instance!", clazz.getName());

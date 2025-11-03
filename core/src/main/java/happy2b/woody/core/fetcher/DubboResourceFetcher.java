@@ -29,6 +29,7 @@ public class DubboResourceFetcher extends AbstractResourceFetcher {
     @Override
     public void fetchResources(Class clazz) {
         try {
+            storeAppClassLoader(clazz);
             Object[] instances = AsyncProfiler.getInstance().getInstances(clazz, 100);
             if (instances == null || instances.length == 0) {
                 WoodyLog.error("Woody: Failed to fetch dubbo '{}' instance!", clazz.getName());

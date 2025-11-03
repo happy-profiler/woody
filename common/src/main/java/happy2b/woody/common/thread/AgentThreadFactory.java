@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadFactory;
 
 public final class AgentThreadFactory implements ThreadFactory {
-    public static final ThreadGroup AGENT_THREAD_GROUP = new ThreadGroup("one-profiler");
+    public static final ThreadGroup AGENT_THREAD_GROUP = new ThreadGroup("woody-profiler");
 
     // known agent threads
     public enum AgentThread {

@@ -4,6 +4,7 @@ import happy2b.woody.common.reflection.ReflectionUtils;
 import happy2b.woody.common.utils.WoodyLog;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * opentelemetry trace id提取
@@ -12,9 +13,9 @@ import java.lang.reflect.Method;
  * @version 1.0
  * @since 2025/11/3
  */
-public class OpenTelemetryIdExtractor implements IdGenerator<String> {
+public class OpenTelemetryTraceIdExtractor implements IdGenerator<String> {
 
-    public static final OpenTelemetryIdExtractor INSTANCE = new OpenTelemetryIdExtractor();
+    public static final OpenTelemetryTraceIdExtractor INSTANCE = new OpenTelemetryTraceIdExtractor();
 
     private int order;
 
@@ -22,7 +23,7 @@ public class OpenTelemetryIdExtractor implements IdGenerator<String> {
 
     private Class sdkSpanClass;
 
-    public OpenTelemetryIdExtractor() {
+    public OpenTelemetryTraceIdExtractor() {
         this.order = ORDER.incrementAndGet();
     }
 
@@ -34,7 +35,7 @@ public class OpenTelemetryIdExtractor implements IdGenerator<String> {
                 optlCurrentContextMethod = ReflectionUtils.findMethod(clazz, "current");
             } catch (Exception e) {
                 WoodyLog.error(e, "Woody: Failed to find method 'io.opentelemetry.context.Context.current()'!");
-                throw new IllegalStateException(e);
+                return UUID.randomUUID().toString();
             }
         }
 
@@ -70,12 +71,13 @@ public class OpenTelemetryIdExtractor implements IdGenerator<String> {
                 }
             }
             if (spanContext == null) {
-                throw new IllegalStateException("Woody: Failed to get spanContext from optl span!");
+                WoodyLog.error("Woody: Failed to get span context from optl context!");
+                return UUID.randomUUID().toString();
             }
             return ReflectionUtils.invoke(spanContext, "getTraceId");
         } catch (Exception e) {
             WoodyLog.error(e, "Woody: Failed to get trace id from optl context!");
-            throw new IllegalStateException(e);
+            return UUID.randomUUID().toString();
         }
     }
 

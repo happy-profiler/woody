@@ -1,7 +1,6 @@
 package happy2b.woody.common.api;
 
 
-
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -14,11 +13,14 @@ import java.util.function.Function;
 public class Config {
 
     public static final Config INSTANCE = new Config();
+
     public static Config get() {
         return INSTANCE;
     }
 
     private String serviceName;
+
+    private ClassLoader appClassLoader;
 
     private Map<Method, Set<Method>> pendingTransformMethods = new ConcurrentHashMap<>();
 
@@ -34,6 +36,16 @@ public class Config {
             jmxMemAllocAvailable = true;
         } catch (Exception e) {
             jmxMemAllocAvailable = false;
+        }
+    }
+
+    public ClassLoader getAppClassLoader() {
+        return appClassLoader;
+    }
+
+    public void setAppClassLoader(ClassLoader appClassLoader) {
+        if (this.appClassLoader == null) {
+            this.appClassLoader = appClassLoader;
         }
     }
 
@@ -80,7 +92,7 @@ public class Config {
         Set<Method> methods = introspectedClassMethods.get(clazz);
         for (Method method : methods) {
             MethodIntrospection introspection = methodLineIntrospections.get(method.hashCode());
-            if(introspection != null){
+            if (introspection != null) {
                 introspections.add(introspection);
             }
         }

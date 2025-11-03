@@ -6,7 +6,6 @@ import happy2b.woody.common.id.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author jiangjibo
@@ -20,7 +19,8 @@ public class IdGeneratorManager {
     public IdGeneratorManager() {
         IdGenerator.ID_GENERATORS[TimeBasedIdGenerator.INSTANCE.getOrder()] = TimeBasedIdGenerator.INSTANCE;
         IdGenerator.ID_GENERATORS[ThreadLocalRandomIdGenerator.INSTANCE.getOrder()] = ThreadLocalRandomIdGenerator.INSTANCE;
-        IdGenerator.ID_GENERATORS[OpenTelemetryIdExtractor.INSTANCE.getOrder()] = OpenTelemetryIdExtractor.INSTANCE;
+        IdGenerator.ID_GENERATORS[OpenTelemetryTraceIdExtractor.INSTANCE.getOrder()] = OpenTelemetryTraceIdExtractor.INSTANCE;
+        IdGenerator.ID_GENERATORS[SkywalkingTraceIdExtractor.INSTANCE.getOrder()] = SkywalkingTraceIdExtractor.INSTANCE;
     }
 
     public int createIdGenerator(int paramIndex, WoodyFunction function) {

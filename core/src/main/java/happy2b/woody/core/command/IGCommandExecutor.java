@@ -2,11 +2,8 @@ package happy2b.woody.core.command;
 
 import happy2b.woody.common.api.WoodyCommand;
 import happy2b.woody.common.api.WoodyCommandExecutor;
-import happy2b.woody.common.id.CustomizeIdGenerator;
+import happy2b.woody.common.id.*;
 import happy2b.woody.common.func.WoodyFunction;
-import happy2b.woody.common.id.OpenTelemetryIdExtractor;
-import happy2b.woody.common.id.ThreadLocalRandomIdGenerator;
-import happy2b.woody.common.id.TimeBasedIdGenerator;
 import happy2b.woody.core.manager.FunctionManager;
 import happy2b.woody.core.manager.IdGeneratorManager;
 
@@ -131,7 +128,8 @@ public class IGCommandExecutor implements WoodyCommandExecutor {
 
         sb.append(TimeBasedIdGenerator.INSTANCE.getOrder()).append(": TimeBased TraceId Generator").append("\n");
         sb.append(ThreadLocalRandomIdGenerator.INSTANCE.getOrder()).append(": ThreadLocalRandom TraceId Generator").append("\n");
-        sb.append(OpenTelemetryIdExtractor.INSTANCE.getOrder()).append(": OpenTelemetry TraceId Extractor");
+        sb.append(OpenTelemetryTraceIdExtractor.INSTANCE.getOrder()).append(": OpenTelemetry TraceId Extractor").append("\n");
+        sb.append(SkywalkingTraceIdExtractor.INSTANCE.getOrder()).append(": SkyWalking TraceId Extractor");
 
         for (CustomizeIdGenerator generator : generators) {
             sb.append("\n");

@@ -20,4 +20,8 @@ public interface ResourceFetcher {
 
     boolean isSupport(Class clazz);
 
+    default void storeAppClassLoader(Class clazz){
+        Config.get().setAppClassLoader(clazz.getClassLoader());
+    }
+
 }
